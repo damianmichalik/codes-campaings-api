@@ -1,0 +1,16 @@
+@apiHost = http://localhost:5109
+
+GET {{apiHost}}/api/campaigns
+Accept: application/json
+
+###
+
+GET {{apiHost}}/api/campaigns/925292a8-980e-40d6-8f15-ad7ec8438c2b
+Accept: application/json
+
+###
+
+DELETE {{apiHost}}/api/campaigns/925292a8-980e-40d6-8f15-ad7ec8438c2c
+Accept: application/json
+
+###
