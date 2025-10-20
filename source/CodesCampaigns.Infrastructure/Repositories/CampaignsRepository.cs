@@ -27,15 +27,10 @@ public class CampaignsRepository(AppDbContext context) : ICampaignsRepository
     }
 
     public async Task<List<Campaign>> GetAll(CancellationToken cancellationToken)
-    {
-        return await context.Campaigns
-            .ToListAsync(cancellationToken);
-    }
+        => await context.Campaigns.ToListAsync(cancellationToken);
 
     public async Task<Campaign?> GetById(CampaignId campaignId, CancellationToken cancellationToken)
-    {
-        return await context.Campaigns
+        => await context.Campaigns
             .Where(c => c.Id == campaignId)
             .FirstOrDefaultAsync(cancellationToken);
-    }
 }

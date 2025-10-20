@@ -6,15 +6,8 @@ using Microsoft.Extensions.Hosting;
 
 namespace CodesCampaigns.Api.Tests.TestUtilities;
 
-public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+internal sealed class CustomWebApplicationFactory(string connectionString) : WebApplicationFactory<Program>
 {
-    private readonly string _connectionString;
-
-    public CustomWebApplicationFactory(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -24,11 +17,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
 
             if (descriptor != null)
+            {
                 services.Remove(descriptor);
+            }
 
             // Add our own with the test container connection string
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(_connectionString));
+                options.UseNpgsql(connectionString));
         });
 
         var host = base.CreateHost(builder);

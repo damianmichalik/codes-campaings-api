@@ -1,4 +1,5 @@
 ﻿using CodesCampaigns.Application.Commands;
+using CodesCampaigns.Application.Entities;
 using CodesCampaigns.Application.Exceptions;
 using CodesCampaigns.Application.Repositories;
 using MediatR;

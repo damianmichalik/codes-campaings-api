@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CodesCampaigns.Api.Exceptions;
 
-public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -13,7 +13,7 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
     {
         var exceptionMessage = exception.Message;
         logger.LogError(
-            "Error Message: {exceptionMessage}, Time of occurrence {time}",
+            "Error Message: {ExceptionMessage}, Time of occurrence {Time}",
             exceptionMessage, DateTime.UtcNow);
 
         httpContext.Response.StatusCode = exception switch
@@ -28,7 +28,9 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
                 Type = exception.GetType().Name,
                 Title = "An error occured",
                 Detail = exception.Message,
-            });
+            },
+            cancellationToken
+        );
 
         return true;
     }
