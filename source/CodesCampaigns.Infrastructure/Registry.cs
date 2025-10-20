@@ -18,11 +18,9 @@ public static class Registry
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         
-        services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(typeof(CreateCampaignCommandHandler).Assembly);
-        });
-        
+        services.AddMediatR(
+            cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCampaignCommandHandler).Assembly)
+        );
         
         services.AddScoped<ICampaignsRepository, CampaignsRepository>();
         

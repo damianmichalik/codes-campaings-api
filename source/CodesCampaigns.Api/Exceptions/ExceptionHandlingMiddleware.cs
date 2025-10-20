@@ -2,7 +2,7 @@
 
 namespace CodesCampaigns.Api.Exceptions;
 
-public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+internal class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
     public async Task Invoke(HttpContext context)
     {
@@ -12,7 +12,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         }
         catch (CampaignNotFoundException ex)
         {
-            logger.LogWarning(ex, ex.Message);
+            logger.LogWarning(ex, "An exception occurred: {Message}", ex.Message);
             context.Response.StatusCode = StatusCodes.Status404NotFound;
             await context.Response.WriteAsJsonAsync(new { error = ex.Message });
         }

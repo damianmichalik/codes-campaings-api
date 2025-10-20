@@ -8,7 +8,7 @@ using Testcontainers.PostgreSql;
 namespace CodesCampaigns.Api.Tests.Hooks;
 
 [Binding]
-public class FeatureHooks
+internal sealed class FeatureHooks
 {
     public static PostgreSqlContainer? PgContainer;
     public static CustomWebApplicationFactory? Factory;
@@ -31,18 +31,24 @@ public class FeatureHooks
         // Apply migrations and optionally seed default data
         using var scope = Factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.Migrate();
+        await db.Database.MigrateAsync();
     }
 
     [AfterFeature]
     public static async Task AfterFeature()
     {
-        if (Factory != null) Factory.Dispose();
-        if (PgContainer != null) await PgContainer.DisposeAsync();
+        if (Factory != null)
+        {
+            await Factory.DisposeAsync();
+        }
+        if (PgContainer != null)
+        {
+            await PgContainer.DisposeAsync();
+        }
     }
     
     [AfterScenario]
-    public void AfterScenario()
+    public static void AfterScenario()
     {
         using var scope = Factory!.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

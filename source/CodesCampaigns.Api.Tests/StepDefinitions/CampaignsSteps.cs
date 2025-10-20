@@ -2,26 +2,27 @@
 using System.Text;
 using System.Text.Json;
 using CodesCampaigns.Api.Tests.Hooks;
-using CodesCampaigns.Api.Tests.TestUtilities;
 using CodesCampaigns.Application.Entities;
 using CodesCampaigns.Application.ValueObjects;
 using CodesCampaigns.Infrastructure.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll;
-using Testcontainers.PostgreSql;
 
 namespace CodesCampaigns.Api.Tests.StepDefinitions;
 
 [Binding]
-public class CampaignsSteps
+internal sealed class CampaignsSteps
 {
-    private readonly PostgreSqlContainer _pgContainer;
-    private CustomWebApplicationFactory? _factory;
     private HttpResponseMessage? _response;
     
+    private static readonly JsonSerializerOptions WriteOptions = new()
+    {
+        WriteIndented = true
+    };
+    
     [Given(@"the following campaigns exist:")]
-    public void GivenTheFollowingCampaignsExist(Table table)
+    public static void GivenTheFollowingCampaignsExist(Table table)
     {
         using var scope = FeatureHooks.Factory!.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -36,18 +37,14 @@ public class CampaignsSteps
 
         db.SaveChanges();
     }
-    
+
     [When(@"I send a (GET|DELETE) request to ""(.*)""")]
     public async Task WhenISendARequestTo(string method, string endpoint)
-    {
-        await SendRequestAsync(method, endpoint, null);
-    }
+        => await SendRequestAsync(method, endpoint, null);
 
     [When(@"I send a (POST|PUT|PATCH) request to ""(.*)"" with body:")]
     public async Task WhenISendARequestToWithBody(string method, string endpoint, string body)
-    {
-        await SendRequestAsync(method, endpoint, body);
-    }
+        => await SendRequestAsync(method, endpoint, body);
 
     [Then(@"the response status code should be (\d+)")]
     public void ThenTheResponseStatusCodeShouldBe(int expectedStatusCode)
@@ -67,14 +64,14 @@ public class CampaignsSteps
         using var actualDoc = JsonDocument.Parse(actualJson);
 
         // Serialize normalized JSON for comparison
-        string Normalize(JsonDocument doc) =>
-            JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = false });
+        static string Normalize(JsonDocument doc) =>
+            JsonSerializer.Serialize(doc, WriteOptions);
         
         Assert.Equal(Normalize(expectedDoc), Normalize(actualDoc));
     }
     
     [Then(@"there are following (.*) in the database")]
-    public void ThenThereAreFollowingEntitiesInTheDatabase(string entityName, Table table)
+    public static void ThenThereAreFollowingEntitiesInTheDatabase(string entityName, Table table)
     {
         // Normalize (handle plural forms like "Campaigns")
         var singularName = entityName.TrimEnd('s');
@@ -121,7 +118,10 @@ public class CampaignsSteps
                 {
                     var prop = entityType.GetProperty(col,
                         BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                    if (prop == null) return false;
+                    if (prop == null)
+                    {
+                        return false;
+                    }
 
                     var actualValue = prop.GetValue(e)?.ToString() ?? "";
                     return string.Equals(expected[col], actualValue, StringComparison.OrdinalIgnoreCase);
@@ -139,8 +139,11 @@ public class CampaignsSteps
         var request = new HttpRequestMessage(new HttpMethod(method), endpoint);
 
         if (!string.IsNullOrWhiteSpace(body))
+        {
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+        }
 
         _response = await client.SendAsync(request);
+        request.Dispose();
     }
 }

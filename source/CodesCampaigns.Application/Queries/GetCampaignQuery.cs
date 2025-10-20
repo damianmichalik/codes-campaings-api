@@ -4,4 +4,4 @@ using MediatR;
 
 namespace CodesCampaigns.Application.Queries;
 
-public record GetCampaignQuery(CampaignId CampaignId) : IRequest<Campaign?>;
+public record GetCampaignQuery(CampaignId CampaignId) : IRequest<Campaign>;
