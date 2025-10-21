@@ -1,6 +1,6 @@
-﻿using CodesCampaigns.Api.DTO;
+﻿using CodesCampaigns.Api.Authentication;
+using CodesCampaigns.Api.DTO;
 using CodesCampaigns.Application.Commands;
-using CodesCampaigns.Application.Entities;
 using CodesCampaigns.Application.Queries;
 using CodesCampaigns.Application.ValueObjects;
 using MediatR;
@@ -10,6 +10,7 @@ namespace CodesCampaigns.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[ApiKey]
 public class CampaignsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
