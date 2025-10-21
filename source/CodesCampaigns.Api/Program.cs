@@ -1,5 +1,7 @@
+using CodesCampaigns.Api.Authentication;
 using CodesCampaigns.Api.Exceptions;
 using CodesCampaigns.Infrastructure;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,34 @@ builder.Services.AddProblemDetails(options =>
     options.CustomizeProblemDetails = context =>
         context.ProblemDetails.Extensions.Add("requestId", context.HttpContext.TraceIdentifier));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Description = "API Key needed to access the endpoints. Example: X-API-KEY: {key}",
+        In = ParameterLocation.Header,
+        Name = "X-API-KEY",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "ApiKeyScheme"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                },
+                In = ParameterLocation.Header,
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+builder.Services.Configure<AuthenticationSettings>(builder.Configuration.GetSection("Authentication"));
 
 builder.Services.AddInfrastructure(builder.Configuration);
 

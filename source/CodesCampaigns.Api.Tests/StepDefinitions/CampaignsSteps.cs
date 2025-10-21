@@ -15,11 +15,28 @@ namespace CodesCampaigns.Api.Tests.StepDefinitions;
 internal sealed class CampaignsSteps
 {
     private HttpResponseMessage? _response;
+    private readonly Dictionary<string, string> _headers = new(StringComparer.OrdinalIgnoreCase);
     
     private static readonly JsonSerializerOptions WriteOptions = new()
     {
         WriteIndented = true
     };
+    
+    [BeforeScenario]
+    public void ClearHeaders()
+        => _headers.Clear();
+    
+    [Given(@"I set the following headers:")]
+    public void GivenISetTheFollowingHeaders(Table table)
+    {
+        _headers.Clear();
+        foreach (var row in table.Rows)
+        {
+            var key = row["Key"];
+            var value = row["Value"];
+            _headers[key] = value;
+        }
+    }
     
     [Given(@"the following campaigns exist:")]
     public static void GivenTheFollowingCampaignsExist(Table table)
@@ -37,6 +54,18 @@ internal sealed class CampaignsSteps
 
         db.SaveChanges();
     }
+    
+    [When(@"I set the following headers:")]
+    public void WhenISetTheFollowingHeaders(Table table)
+    {
+        _headers.Clear();
+        foreach (var row in table.Rows)
+        {
+            var key = row["Key"];
+            var value = row["Value"];
+            _headers[key] = value;
+        }
+    }
 
     [When(@"I send a (GET|DELETE) request to ""(.*)""")]
     public async Task WhenISendARequestTo(string method, string endpoint)
@@ -45,6 +74,17 @@ internal sealed class CampaignsSteps
     [When(@"I send a (POST|PUT|PATCH) request to ""(.*)"" with body:")]
     public async Task WhenISendARequestToWithBody(string method, string endpoint, string body)
         => await SendRequestAsync(method, endpoint, body);
+    
+    [When(@"I send a (GET|DELETE|POST|PUT|PATCH) request to ""(.*)"" with headers:")]
+    public async Task WhenISendARequestToWithHeaders(string method, string endpoint, Table table)
+    {
+        foreach (var row in table.Rows)
+        {
+            _headers[row["Key"]] = row["Value"];
+        }
+
+        await SendRequestAsync(method, endpoint, null);
+    }
 
     [Then(@"the response status code should be (\d+)")]
     public void ThenTheResponseStatusCodeShouldBe(int expectedStatusCode)
@@ -137,6 +177,11 @@ internal sealed class CampaignsSteps
         var client = FeatureHooks.Factory!.CreateClient();
 
         var request = new HttpRequestMessage(new HttpMethod(method), endpoint);
+        
+        foreach (var (key, value) in _headers)
+        {
+            request.Headers.Add(key, value);
+        }
 
         if (!string.IsNullOrWhiteSpace(body))
         {

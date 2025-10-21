@@ -24,7 +24,7 @@ namespace CodesCampaigns.Api.Tests.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Campaigns management", "    As a developer\r\n    I want to have a set of endpoints to manage campaigns", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Campaigns management", "  As a developer\r\n  I want to have a set of endpoints to manage campaigns", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
         private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
@@ -106,7 +106,7 @@ namespace CodesCampaigns.Api.Tests.Features
         public virtual async global::System.Threading.Tasks.Task FeatureBackgroundAsync()
         {
 #line 5
-    #line hidden
+  #line hidden
             global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
                         "Id",
                         "Name"});
@@ -117,13 +117,13 @@ namespace CodesCampaigns.Api.Tests.Features
                         "22222222-2222-2222-2222-222222222222",
                         "Campaign Two"});
 #line 6
-        await testRunner.GivenAsync("the following campaigns exist:", ((string)(null)), table1, "Given ");
+    await testRunner.GivenAsync("the following campaigns exist:", ((string)(null)), table1, "Given ");
 #line hidden
         }
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Campaigns.feature.ndjson", 12);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Campaigns.feature.ndjson", 22);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -163,7 +163,7 @@ namespace CodesCampaigns.Api.Tests.Features
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 11
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -173,17 +173,103 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
+                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table2.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
 #line 12
-        await testRunner.WhenAsync("I send a GET request to \"/api/campaigns\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns\" with headers:", ((string)(null)), table2, "When ");
 #line hidden
-#line 13
-        await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 15
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 14
-        await testRunner.AndAsync("the response should match JSON:", "[\r\n  { \"id\": \"11111111-1111-1111-1111-111111111111\", \"name\": \"Campaign One\" },\r\n " +
+#line 16
+    await testRunner.AndAsync("the response should match JSON:", "[\r\n  { \"id\": \"11111111-1111-1111-1111-111111111111\", \"name\": \"Campaign One\" },\r\n " +
                         " { \"id\": \"22222222-2222-2222-2222-222222222222\", \"name\": \"Campaign Two\" }\r\n]", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unauthorized access is denied when no API key is provided for retrieving all camp" +
+            "aigns")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Unauthorized access is denied when no API key is provided for retrieving all camp" +
+            "aigns")]
+        public async global::System.Threading.Tasks.Task UnauthorizedAccessIsDeniedWhenNoAPIKeyIsProvidedForRetrievingAllCampaigns()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "1";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unauthorized access is denied when no API key is provided for retrieving all camp" +
+                    "aigns", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 24
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 25
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 26
+    await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Access is forbidden when an invalid API key is provided for retrieving all campai" +
+            "gns")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Access is forbidden when an invalid API key is provided for retrieving all campai" +
+            "gns")]
+        public async global::System.Threading.Tasks.Task AccessIsForbiddenWhenAnInvalidAPIKeyIsProvidedForRetrievingAllCampaigns()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "2";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Access is forbidden when an invalid API key is provided for retrieving all campai" +
+                    "gns", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 28
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table3 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table3.AddRow(new string[] {
+                            "X-API-KEY",
+                            "invalid-key"});
+#line 29
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns\" with headers:", ((string)(null)), table3, "When ");
+#line hidden
+#line 32
+    await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -196,12 +282,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "1";
+            string pickleIndex = "3";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get single campaign by ID", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 22
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 34
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -211,16 +297,23 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 23
-        await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table4 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table4.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 35
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
+                        "h headers:", ((string)(null)), table4, "When ");
 #line hidden
-#line 24
-        await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 38
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 25
-        await testRunner.AndAsync("the response should match JSON:", "{ \"id\": \"11111111-1111-1111-1111-111111111111\", \"name\": \"Campaign One\" }", ((global::Reqnroll.Table)(null)), "And ");
+#line 39
+    await testRunner.AndAsync("the response should match JSON:", "{ \"id\": \"11111111-1111-1111-1111-111111111111\", \"name\": \"Campaign One\" }", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -233,12 +326,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "2";
+            string pickleIndex = "4";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get single campaign by unexisting ID", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 30
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 44
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -248,13 +341,101 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 31
-        await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table5 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table5.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 45
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\" wit" +
+                        "h headers:", ((string)(null)), table5, "When ");
 #line hidden
-#line 32
-        await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 48
+    await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unauthorized access is denied when no API key is provided for retrieving single c" +
+            "ampaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Unauthorized access is denied when no API key is provided for retrieving single c" +
+            "ampaign")]
+        public async global::System.Threading.Tasks.Task UnauthorizedAccessIsDeniedWhenNoAPIKeyIsProvidedForRetrievingSingleCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "5";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unauthorized access is denied when no API key is provided for retrieving single c" +
+                    "ampaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 50
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 51
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 52
+    await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Access is forbidden when an invalid API key is provided for retrieving single cam" +
+            "paign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Access is forbidden when an invalid API key is provided for retrieving single cam" +
+            "paign")]
+        public async global::System.Threading.Tasks.Task AccessIsForbiddenWhenAnInvalidAPIKeyIsProvidedForRetrievingSingleCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "6";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Access is forbidden when an invalid API key is provided for retrieving single cam" +
+                    "paign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 54
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table6 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table6.AddRow(new string[] {
+                            "X-API-KEY",
+                            "invalid-key"});
+#line 55
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
+                        "h headers:", ((string)(null)), table6, "When ");
+#line hidden
+#line 58
+    await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -267,12 +448,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "3";
+            string pickleIndex = "7";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create a new campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 34
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 60
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -282,24 +463,33 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 35
-        await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"New Campaign\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table7 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table7.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 61
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table7, "When ");
 #line hidden
-#line 41
-        await testRunner.ThenAsync("the response status code should be 201", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 64
+    await testRunner.AndAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"New Campaign\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
+#line 70
+    await testRunner.ThenAsync("the response status code should be 201", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+                global::Reqnroll.Table table8 = new global::Reqnroll.Table(new string[] {
                             "Name"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Campaign One"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Campaign Two"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "New Campaign"});
-#line 42
-        await testRunner.ThenAsync("there are following Campaigns in the database", ((string)(null)), table2, "Then ");
+#line 71
+    await testRunner.ThenAsync("there are following Campaigns in the database", ((string)(null)), table8, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -312,12 +502,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "4";
+            string pickleIndex = "8";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Validation for creating campaing", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 48
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 77
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -327,13 +517,99 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 49
-        await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table9 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table9.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 78
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table9, "When ");
 #line hidden
-#line 55
-        await testRunner.ThenAsync("the response status code should be 400", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 81
+    await testRunner.AndAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 87
+    await testRunner.ThenAsync("the response status code should be 400", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unauthorized access is denied when no API key is provided for creating campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Unauthorized access is denied when no API key is provided for creating campaign")]
+        public async global::System.Threading.Tasks.Task UnauthorizedAccessIsDeniedWhenNoAPIKeyIsProvidedForCreatingCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "9";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unauthorized access is denied when no API key is provided for creating campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 89
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 90
+    await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 96
+    await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Access is forbidden when an invalid API key is provided for creating campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Access is forbidden when an invalid API key is provided for creating campaign")]
+        public async global::System.Threading.Tasks.Task AccessIsForbiddenWhenAnInvalidAPIKeyIsProvidedForCreatingCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "10";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Access is forbidden when an invalid API key is provided for creating campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 98
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table10 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table10.AddRow(new string[] {
+                            "X-API-KEY",
+                            "invalid-key"});
+#line 99
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table10, "When ");
+#line hidden
+#line 102
+    await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 108
+    await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -346,12 +622,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "5";
+            string pickleIndex = "11";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update a campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 57
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 110
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -361,23 +637,32 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 58
-        await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
-                        "h body:", "{\r\n  \"name\": \"Updated campaign one\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table11 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table11.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 111
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table11, "When ");
 #line hidden
-#line 64
-        await testRunner.ThenAsync("the response status code should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 114
+    await testRunner.AndAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
+                        "h body:", "{\r\n  \"name\": \"Updated campaign one\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-                global::Reqnroll.Table table3 = new global::Reqnroll.Table(new string[] {
+#line 120
+    await testRunner.ThenAsync("the response status code should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+                global::Reqnroll.Table table12 = new global::Reqnroll.Table(new string[] {
                             "Name"});
-                table3.AddRow(new string[] {
+                table12.AddRow(new string[] {
                             "Updated campaign one"});
-                table3.AddRow(new string[] {
+                table12.AddRow(new string[] {
                             "Campaign Two"});
-#line 65
-        await testRunner.ThenAsync("there are following Campaigns in the database", ((string)(null)), table3, "Then ");
+#line 121
+    await testRunner.ThenAsync("there are following Campaigns in the database", ((string)(null)), table12, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -390,12 +675,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "6";
+            string pickleIndex = "12";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Validation for updating campaing", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 70
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 126
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -405,14 +690,23 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 71
-        await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
-                        "h body:", "{\r\n  \"name\": \"\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table13 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table13.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 127
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table13, "When ");
 #line hidden
-#line 77
-        await testRunner.ThenAsync("the response status code should be 400", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 130
+    await testRunner.AndAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
+                        "h body:", "{\r\n  \"name\": \"\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 136
+    await testRunner.ThenAsync("the response status code should be 400", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -425,12 +719,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "7";
+            string pickleIndex = "13";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update a not existing campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 79
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 138
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -440,14 +734,102 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 80
-        await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\" wit" +
-                        "h body:", "{\r\n  \"name\": \"Updated campaign\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table14 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table14.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 139
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table14, "When ");
 #line hidden
-#line 86
-        await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 142
+    await testRunner.AndAsync("I send a PUT request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\" wit" +
+                        "h body:", "{\r\n  \"name\": \"Updated campaign\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 148
+    await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unauthorized access is denied when no API key is provided for updating campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Unauthorized access is denied when no API key is provided for updating campaign")]
+        public async global::System.Threading.Tasks.Task UnauthorizedAccessIsDeniedWhenNoAPIKeyIsProvidedForUpdatingCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "14";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unauthorized access is denied when no API key is provided for updating campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 150
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 151
+    await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
+                        "h body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 157
+    await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Access is forbidden when an invalid API key is provided for updating campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Access is forbidden when an invalid API key is provided for updating campaign")]
+        public async global::System.Threading.Tasks.Task AccessIsForbiddenWhenAnInvalidAPIKeyIsProvidedForUpdatingCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "15";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Access is forbidden when an invalid API key is provided for updating campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 159
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table15 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table15.AddRow(new string[] {
+                            "X-API-KEY",
+                            "invalid-key"});
+#line 160
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table15, "When ");
+#line hidden
+#line 163
+    await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
+                        "h body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 169
+    await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -460,12 +842,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "8";
+            string pickleIndex = "16";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete a campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 88
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 171
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -475,20 +857,27 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 89
-        await testRunner.WhenAsync("I send a DELETE request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table16 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table16.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 172
+    await testRunner.WhenAsync("I send a DELETE request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" " +
+                        "with headers:", ((string)(null)), table16, "When ");
 #line hidden
-#line 90
-        await testRunner.ThenAsync("the response status code should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 175
+    await testRunner.ThenAsync("the response status code should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-                global::Reqnroll.Table table4 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table17 = new global::Reqnroll.Table(new string[] {
                             "Name"});
-                table4.AddRow(new string[] {
+                table17.AddRow(new string[] {
                             "Campaign Two"});
-#line 91
-        await testRunner.ThenAsync("there are following Campaigns in the database", ((string)(null)), table4, "Then ");
+#line 176
+    await testRunner.ThenAsync("there are following Campaigns in the database", ((string)(null)), table17, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -501,12 +890,12 @@ namespace CodesCampaigns.Api.Tests.Features
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "9";
+            string pickleIndex = "17";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete a not existing campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 95
-    this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 180
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -516,13 +905,95 @@ namespace CodesCampaigns.Api.Tests.Features
             {
                 await this.ScenarioStartAsync();
 #line 5
-    await this.FeatureBackgroundAsync();
+  await this.FeatureBackgroundAsync();
 #line hidden
-#line 96
-        await testRunner.WhenAsync("I send a DELETE request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+                global::Reqnroll.Table table18 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table18.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 181
+    await testRunner.WhenAsync("I send a DELETE request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\" " +
+                        "with headers:", ((string)(null)), table18, "When ");
 #line hidden
-#line 97
-        await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 184
+    await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unauthorized access is denied when no API key is provided for deleting campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Unauthorized access is denied when no API key is provided for deleting campaign")]
+        public async global::System.Threading.Tasks.Task UnauthorizedAccessIsDeniedWhenNoAPIKeyIsProvidedForDeletingCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "18";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unauthorized access is denied when no API key is provided for deleting campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 186
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 187
+    await testRunner.WhenAsync("I send a DELETE request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 188
+    await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Access is forbidden when an invalid API key is provided for deleting campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Access is forbidden when an invalid API key is provided for deleting campaign")]
+        public async global::System.Threading.Tasks.Task AccessIsForbiddenWhenAnInvalidAPIKeyIsProvidedForDeletingCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "19";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Access is forbidden when an invalid API key is provided for deleting campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 190
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table19 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table19.AddRow(new string[] {
+                            "X-API-KEY",
+                            "invalid-key"});
+#line 191
+    await testRunner.WhenAsync("I send a DELETE request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" " +
+                        "with headers:", ((string)(null)), table19, "When ");
+#line hidden
+#line 194
+    await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
