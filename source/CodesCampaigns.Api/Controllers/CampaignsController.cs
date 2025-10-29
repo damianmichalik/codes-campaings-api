@@ -66,4 +66,18 @@ public class CampaignsController(IMediator mediator) : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpPost("{campaignId:guid}/codes")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> GenerateCodes(Guid campaignId, [FromBody] GenerateTopUpCodesDto generateTopUpCodesDto)
+    {
+        await mediator.Send(new GenerateTopUpCodesCommand(
+            campaignId, 
+            generateTopUpCodesDto.Count,
+            generateTopUpCodesDto.Value,
+            generateTopUpCodesDto.Currency
+        ));
+
+        return NoContent();
+    }
 }

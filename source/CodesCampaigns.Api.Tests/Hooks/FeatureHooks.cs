@@ -54,6 +54,7 @@ internal sealed class FeatureHooks
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         // Remove all campaigns (or any other tables you want to reset)
+        db.TopUps.RemoveRange(db.TopUps);
         db.Campaigns.RemoveRange(db.Campaigns);
         db.SaveChanges();
     }

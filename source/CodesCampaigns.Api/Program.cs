@@ -1,6 +1,8 @@
 using CodesCampaigns.Api.Authentication;
 using CodesCampaigns.Api.Exceptions;
+using CodesCampaigns.Application;
 using CodesCampaigns.Infrastructure;
+using Hangfire;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +44,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.Configure<AuthenticationSettings>(builder.Configuration.GetSection("Authentication"));
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
@@ -52,6 +55,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHangfireDashboard();
 app.UseHttpsRedirection();
 app.UseExceptionHandler();
 

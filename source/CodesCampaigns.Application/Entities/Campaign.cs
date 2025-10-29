@@ -4,16 +4,13 @@ namespace CodesCampaigns.Application.Entities;
 
 public class Campaign
 {
-    public CampaignId Id { get; set; } = null!; 
+    public CampaignId Id { get; }
     public string Name { get; set; } = string.Empty;
+    public IReadOnlyCollection<TopUp> TopUps { get; private set; } = [];
 
-    private Campaign()
+    public Campaign(CampaignId id, string name)
     {
-    }
-
-    public Campaign(CampaignId campaignId, string name)
-    {
-        Id = campaignId;
+        Id = id;
         Name = name;
     }
 }

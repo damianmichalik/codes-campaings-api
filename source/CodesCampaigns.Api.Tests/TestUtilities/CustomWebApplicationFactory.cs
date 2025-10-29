@@ -1,4 +1,6 @@
 ﻿using CodesCampaigns.Infrastructure.DAL;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +14,6 @@ internal sealed class CustomWebApplicationFactory(string connectionString) : Web
     {
         builder.ConfigureServices(services =>
         {
-            // Remove the existing AppDbContext registration
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
 
@@ -21,17 +22,32 @@ internal sealed class CustomWebApplicationFactory(string connectionString) : Web
                 services.Remove(descriptor);
             }
 
-            // Add our own with the test container connection string
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
+            
+            var hangfireDescriptor = services.FirstOrDefault(
+                d => d.ServiceType == typeof(IGlobalConfiguration));
+            if (hangfireDescriptor != null)
+            {
+                services.Remove(hangfireDescriptor);
+            }
+
+            var jobClientDescriptor = services.FirstOrDefault(
+                d => d.ServiceType == typeof(IBackgroundJobClient));
+            if (jobClientDescriptor != null)
+            {
+                services.Remove(jobClientDescriptor);
+            }
+
+            services.AddHangfire(config => config.UseMemoryStorage());
+            services.AddHangfireServer();
         });
 
         var host = base.CreateHost(builder);
 
-        // Apply migrations after host is built
         using var scope = host.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.Migrate(); // <-- runs all migrations
+        db.Database.Migrate();
 
         return host;
     }
