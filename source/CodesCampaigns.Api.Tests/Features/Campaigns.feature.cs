@@ -123,7 +123,7 @@ namespace CodesCampaigns.Api.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Campaigns.feature.ndjson", 22);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Campaigns.feature.ndjson", 23);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -994,6 +994,56 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 194
     await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Create codes in campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Create codes in campaign")]
+        public async global::System.Threading.Tasks.Task CreateCodesInCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "20";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create codes in campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 196
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table20 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table20.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 197
+    await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table20, "When ");
+#line hidden
+#line 200
+    await testRunner.AndAsync("I send a POST request to \"/api/campaigns/11111111-1111-1111-1111-111111111111/cod" +
+                        "es\" with body:", "{\r\n  \"count\": 10,\r\n  \"value\": 20,\r\n  \"currency\": \"PLN\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 208
+    await testRunner.AndAsync("I wait for the jobs to complete", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 209
+    await testRunner.ThenAsync("the response status code should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 210
+    await testRunner.AndAsync("there are 10 TopUps elements in the database", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

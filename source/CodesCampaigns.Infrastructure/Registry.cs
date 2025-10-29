@@ -2,6 +2,8 @@
 using CodesCampaigns.Application.Repositories;
 using CodesCampaigns.Infrastructure.DAL;
 using CodesCampaigns.Infrastructure.Repositories;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,17 @@ public static class Registry
         );
         
         services.AddScoped<ICampaignsRepository, CampaignsRepository>();
+        services.AddScoped<ITopUpsRepository, TopUpsRepository>();
+        
+        services.AddHangfire(config =>
+            config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(options => 
+                    options.UseNpgsqlConnection(configuration.GetConnectionString("DefaultConnection"))
+                ));
+        
+        services.AddHangfireServer();
         
         return services;
     }

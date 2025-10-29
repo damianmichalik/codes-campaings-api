@@ -2,9 +2,8 @@
 using System.Text;
 using System.Text.Json;
 using CodesCampaigns.Api.Tests.Hooks;
-using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.ValueObjects;
 using CodesCampaigns.Infrastructure.DAL;
+using CodesCampaigns.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll;
@@ -48,7 +47,11 @@ internal sealed class CampaignsSteps
         {
             var id = Guid.Parse(row["Id"]);
             var name = row["Name"];
-            var campaign = new Campaign(new CampaignId(id), name);
+            var campaign = new Campaign
+            {
+                Id = id,
+                Name = name,
+            };
             db.Campaigns.Add(campaign);
         }
 
@@ -85,6 +88,10 @@ internal sealed class CampaignsSteps
 
         await SendRequestAsync(method, endpoint, null);
     }
+
+    [When(@"I wait for the jobs to complete")]
+    public static async Task WhenIWaitForTheJobsToComplete()
+        => await Task.Delay(200);
 
     [Then(@"the response status code should be (\d+)")]
     public void ThenTheResponseStatusCodeShouldBe(int expectedStatusCode)
@@ -170,6 +177,46 @@ internal sealed class CampaignsSteps
             Assert.True(found,
                 $"Expected entity with values [{string.Join(", ", expected.Select(kv => $"{kv.Key}={kv.Value}"))}] not found in database.");
         }
+    }
+    
+    [Then(@"there are (\d+) (.*) elements in the database")]
+    public static void ThenThereAreFollowingEntitiesInTheDatabase(int expectedCount, string entityName)
+    {
+        // Normalize (handle plural forms like "Campaigns")
+        var singularName = entityName.TrimEnd('s');
+
+        // Resolve AppDbContext from DI
+        using var scope = FeatureHooks.Factory!.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        // Find entity type (e.g. "Campaign" -> typeof(Campaign))
+        var entityType = Assembly.GetAssembly(typeof(Campaign))!
+            .GetTypes()
+            .FirstOrDefault(t => string.Equals(t.Name, singularName, StringComparison.OrdinalIgnoreCase));
+
+        Assert.NotNull(entityType);
+
+        // Find DbSet<T> property in DbContext
+        var dbSetProp = db.GetType().GetProperties()
+            .FirstOrDefault(p =>
+                p.PropertyType.IsGenericType &&
+                p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>) &&
+                p.PropertyType.GetGenericArguments()[0] == entityType);
+
+        Assert.NotNull(dbSetProp);
+
+        // Get IQueryable<T> from the DbSet<T>
+        var dbSetValue = dbSetProp.GetValue(db);
+        var queryable = dbSetValue as IQueryable ?? throw new InvalidOperationException("DbSet is not queryable");
+
+        // Materialize entities as List<object>
+        var toListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Static | BindingFlags.Public)!
+            .MakeGenericMethod(entityType);
+
+        var entities = (IEnumerable<object>)toListMethod.Invoke(null, new object[] { queryable })!;
+
+        // Compare counts
+        Assert.Equal(expectedCount, entities.Count());
     }
     
     private async Task SendRequestAsync(string method, string endpoint, string? body)

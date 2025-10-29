@@ -192,3 +192,19 @@
       | Key       | Value       |
       | X-API-KEY | invalid-key |
     Then the response status code should be 403
+        
+  Scenario: Create codes in campaign
+    When I set the following headers:
+      | Key       | Value               |
+      | X-API-KEY | my-super-secret-key |
+    And I send a POST request to "/api/campaigns/11111111-1111-1111-1111-111111111111/codes" with body:
+    """
+    {
+      "count": 10,
+      "value": 20,
+      "currency": "PLN"
+    }
+    """
+    And I wait for the jobs to complete
+    Then the response status code should be 204
+    And there are 10 TopUps elements in the database
