@@ -1,4 +1,4 @@
-﻿namespace CodesCampaigns.Application.ValueObjects;
+﻿namespace CodesCampaigns.Domain.ValueObjects;
 
 public record Money
 {

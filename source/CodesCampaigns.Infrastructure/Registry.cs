@@ -1,5 +1,4 @@
-﻿using CodesCampaigns.Application.Handlers;
-using CodesCampaigns.Application.Repositories;
+﻿using CodesCampaigns.Domain.Repositories;
 using CodesCampaigns.Infrastructure.DAL;
 using CodesCampaigns.Infrastructure.Repositories;
 using Hangfire;
@@ -19,10 +18,6 @@ public static class Registry
     {
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-        
-        services.AddMediatR(
-            cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCampaignCommandHandler).Assembly)
-        );
         
         services.AddScoped<ICampaignsRepository, CampaignsRepository>();
         services.AddScoped<ITopUpsRepository, TopUpsRepository>();

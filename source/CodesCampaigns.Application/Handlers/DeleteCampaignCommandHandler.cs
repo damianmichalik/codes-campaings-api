@@ -1,12 +1,11 @@
-﻿using CodesCampaigns.Application.Commands;
-using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.Exceptions;
-using CodesCampaigns.Application.Repositories;
-using MediatR;
+﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Application.Commands;
+using CodesCampaigns.Domain.Exceptions;
+using CodesCampaigns.Domain.Repositories;
 
 namespace CodesCampaigns.Application.Handlers;
 
-public class DeleteCampaignCommandHandler(ICampaignsRepository campaignsRepository) : IRequestHandler<DeleteCampaignCommand>
+public class DeleteCampaignCommandHandler(ICampaignsRepository campaignsRepository) : ICommandHandler<DeleteCampaignCommand>
 {
     public async Task Handle(DeleteCampaignCommand command, CancellationToken cancellationToken)
     {

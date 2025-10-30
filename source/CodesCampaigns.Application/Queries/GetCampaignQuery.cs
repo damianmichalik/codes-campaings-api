@@ -1,7 +1,7 @@
-﻿using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.ValueObjects;
-using MediatR;
+﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Domain.Entities;
+using CodesCampaigns.Domain.ValueObjects;
 
 namespace CodesCampaigns.Application.Queries;
 
-public record GetCampaignQuery(CampaignId CampaignId) : IRequest<Campaign>;
+public record GetCampaignQuery(CampaignId CampaignId) : IQuery<Campaign>;

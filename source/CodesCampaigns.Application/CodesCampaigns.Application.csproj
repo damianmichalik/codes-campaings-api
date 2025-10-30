@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <PackageReference Include="MediatR" />
         <PackageReference Include="Hangfire" />
+        <PackageReference Include="Scrutor" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\CodesCampaigns.Domain\CodesCampaigns.Domain.csproj" />
     </ItemGroup>
 </Project>

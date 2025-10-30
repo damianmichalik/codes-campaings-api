@@ -1,5 +1,5 @@
-﻿using DomainTopUp = CodesCampaigns.Application.Entities.TopUp;
-using CodesCampaigns.Application.Repositories;
+﻿using DomainTopUp = CodesCampaigns.Domain.Entities.TopUp;
+using CodesCampaigns.Domain.Repositories;
 using CodesCampaigns.Infrastructure.DAL;
 using CodesCampaigns.Infrastructure.Entities;
 

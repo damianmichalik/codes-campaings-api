@@ -1,6 +1,6 @@
-﻿using CodesCampaigns.Application.Entities;
+﻿using CodesCampaigns.Domain.Entities;
 
-namespace CodesCampaigns.Application.Repositories;
+namespace CodesCampaigns.Domain.Repositories;
 
 public interface ITopUpsRepository
 {

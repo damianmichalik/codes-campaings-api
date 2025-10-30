@@ -1,9 +1,10 @@
 ﻿using CodesCampaigns.Api.Authentication;
 using CodesCampaigns.Api.DTO;
+using CodesCampaigns.Application.Abstractions;
 using CodesCampaigns.Application.Commands;
 using CodesCampaigns.Application.Queries;
-using CodesCampaigns.Application.ValueObjects;
-using MediatR;
+using CodesCampaigns.Domain.Entities;
+using CodesCampaigns.Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodesCampaigns.Api.Controllers;
@@ -11,12 +12,18 @@ namespace CodesCampaigns.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiKey]
-public class CampaignsController(IMediator mediator) : ControllerBase
+public class CampaignsController() : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetCampaigns()
+    public async Task<IActionResult> GetCampaigns(
+        IQueryHandler<GetCampaignsQuery, IEnumerable<Campaign>> queryHandler,
+        CancellationToken cancellationToken
+    )
     {
-        var campaigns = await mediator.Send(new GetCampaignsQuery());
+        var campaigns = await queryHandler.Handle(
+            new GetCampaignsQuery(), 
+            cancellationToken
+        );
         var campaignDtos = campaigns.Select((campaign) => new CampaignDto
         {
             Id = campaign.Id.ToString(),
@@ -26,9 +33,13 @@ public class CampaignsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{campaignId:guid}")]
-    public async Task<ActionResult> GetCampaign(Guid campaignId)
+    public async Task<ActionResult> GetCampaign(
+        Guid campaignId,
+        IQueryHandler<GetCampaignQuery, Campaign> queryHandler,
+        CancellationToken cancellationToken
+    )
     {
-        var campaign = await mediator.Send(new GetCampaignQuery(campaignId));
+        var campaign = await queryHandler.Handle(new GetCampaignQuery(campaignId), cancellationToken);
         var campaignDto = new CampaignDto
         {
             Id = campaign.Id.ToString(),
@@ -39,10 +50,13 @@ public class CampaignsController(IMediator mediator) : ControllerBase
     
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create([FromBody] CreateCampaignDto createCampaignDto)
+    public async Task<IActionResult> Create(
+        [FromBody] CreateCampaignDto createCampaignDto,
+        ICommandHandler<CreateCampaignCommand> commandHandler,
+        CancellationToken cancellationToken)
     {
         var campaignId = CampaignId.Create();
-        await mediator.Send(new CreateCampaignCommand(campaignId, createCampaignDto.Name));
+        await commandHandler.Handle(new CreateCampaignCommand(campaignId, createCampaignDto.Name), cancellationToken);
 
         return CreatedAtAction(nameof(GetCampaigns), new { id = campaignId.ToString() });
     }
@@ -50,9 +64,13 @@ public class CampaignsController(IMediator mediator) : ControllerBase
     [HttpDelete("{campaignId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(Guid campaignId)
+    public async Task<IActionResult> Delete(
+        Guid campaignId,
+        ICommandHandler<DeleteCampaignCommand> commandHandler,
+        CancellationToken cancellationToken
+    )
     {
-        await mediator.Send(new DeleteCampaignCommand(campaignId));
+        await commandHandler.Handle(new DeleteCampaignCommand(campaignId), cancellationToken);
 
         return NoContent();
     }
@@ -60,23 +78,33 @@ public class CampaignsController(IMediator mediator) : ControllerBase
     [HttpPut("{campaignId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(Guid campaignId, [FromBody] UpdateCampaignDto updateCampaignDto)
+    public async Task<IActionResult> Update(
+        Guid campaignId, 
+        [FromBody] UpdateCampaignDto updateCampaignDto,
+        ICommandHandler<UpdateCampaignCommand> commandHandler,
+        CancellationToken cancellationToken
+    )
     {
-        await mediator.Send(new UpdateCampaignCommand(campaignId, updateCampaignDto.Name));
+        await commandHandler.Handle(new UpdateCampaignCommand(campaignId, updateCampaignDto.Name), cancellationToken);
 
         return NoContent();
     }
     
     [HttpPost("{campaignId:guid}/codes")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> GenerateCodes(Guid campaignId, [FromBody] GenerateTopUpCodesDto generateTopUpCodesDto)
+    public async Task<IActionResult> GenerateCodes(
+        Guid campaignId, 
+        [FromBody] GenerateTopUpCodesDto generateTopUpCodesDto,
+        ICommandHandler<GenerateTopUpCodesCommand> commandHandler,
+        CancellationToken cancellationToken
+    )
     {
-        await mediator.Send(new GenerateTopUpCodesCommand(
+        await commandHandler.Handle(new GenerateTopUpCodesCommand(
             campaignId, 
             generateTopUpCodesDto.Count,
             generateTopUpCodesDto.Value,
             generateTopUpCodesDto.Currency
-        ));
+        ), cancellationToken);
 
         return NoContent();
     }

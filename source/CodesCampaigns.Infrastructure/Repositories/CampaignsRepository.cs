@@ -1,7 +1,7 @@
-﻿using CodesCampaigns.Application.Exceptions;
-using DomainCampaign = CodesCampaigns.Application.Entities.Campaign;
-using CodesCampaigns.Application.Repositories;
-using CodesCampaigns.Application.ValueObjects;
+﻿using CodesCampaigns.Domain.Exceptions;
+using DomainCampaign = CodesCampaigns.Domain.Entities.Campaign;
+using CodesCampaigns.Domain.Repositories;
+using CodesCampaigns.Domain.ValueObjects;
 using CodesCampaigns.Infrastructure.DAL;
 using CodesCampaigns.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
