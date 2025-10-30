@@ -1,12 +1,12 @@
-﻿using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.Exceptions;
+﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Domain.Entities;
+using CodesCampaigns.Domain.Exceptions;
 using CodesCampaigns.Application.Queries;
-using CodesCampaigns.Application.Repositories;
-using MediatR;
+using CodesCampaigns.Domain.Repositories;
 
 namespace CodesCampaigns.Application.Handlers;
 
-public class GetCampaignQueryHandler(ICampaignsRepository campaignsRepository) : IRequestHandler<GetCampaignQuery, Campaign>
+public class GetCampaignQueryHandler(ICampaignsRepository campaignsRepository) : IQueryHandler<GetCampaignQuery, Campaign>
 {
     public async Task<Campaign> Handle(GetCampaignQuery query, CancellationToken cancellationToken)
     {

@@ -1,6 +1,6 @@
-﻿using CodesCampaigns.Application.Entities;
-using MediatR;
+﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Domain.Entities;
 
 namespace CodesCampaigns.Application.Queries;
 
-public record GetCampaignsQuery : IRequest<IEnumerable<Campaign>>;
+public record GetCampaignsQuery : IQuery<IEnumerable<Campaign>>;

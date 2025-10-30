@@ -1,11 +1,11 @@
+using CodesCampaigns.Application.Abstractions;
 using CodesCampaigns.Application.Commands;
-using CodesCampaigns.Application.Exceptions;
-using CodesCampaigns.Application.Repositories;
-using MediatR;
+using CodesCampaigns.Domain.Exceptions;
+using CodesCampaigns.Domain.Repositories;
 
 namespace CodesCampaigns.Application.Handlers;
 
-public class UpdateCampaignCommandHandler(ICampaignsRepository campaignsRepository) : IRequestHandler<UpdateCampaignCommand>
+public class UpdateCampaignCommandHandler(ICampaignsRepository campaignsRepository) : ICommandHandler<UpdateCampaignCommand>
 {
     public async Task Handle(UpdateCampaignCommand command, CancellationToken cancellationToken)
     {

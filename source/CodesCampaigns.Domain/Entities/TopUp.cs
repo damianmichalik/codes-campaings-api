@@ -1,6 +1,6 @@
-﻿using CodesCampaigns.Application.ValueObjects;
+﻿using CodesCampaigns.Domain.ValueObjects;
 
-namespace CodesCampaigns.Application.Entities;
+namespace CodesCampaigns.Domain.Entities;
 
 public class TopUp
 {

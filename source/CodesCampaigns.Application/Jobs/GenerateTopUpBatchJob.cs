@@ -1,7 +1,7 @@
 ﻿using CodesCampaigns.Application.Commands;
-using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.Repositories;
-using CodesCampaigns.Application.ValueObjects;
+using CodesCampaigns.Domain.Entities;
+using CodesCampaigns.Domain.Repositories;
+using CodesCampaigns.Domain.ValueObjects;
 
 namespace CodesCampaigns.Application.Jobs;
 

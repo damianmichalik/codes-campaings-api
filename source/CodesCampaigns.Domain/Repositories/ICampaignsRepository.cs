@@ -1,7 +1,7 @@
-﻿using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.ValueObjects;
+﻿using CodesCampaigns.Domain.Entities;
+using CodesCampaigns.Domain.ValueObjects;
 
-namespace CodesCampaigns.Application.Repositories;
+namespace CodesCampaigns.Domain.Repositories;
 
 public interface ICampaignsRepository
 {

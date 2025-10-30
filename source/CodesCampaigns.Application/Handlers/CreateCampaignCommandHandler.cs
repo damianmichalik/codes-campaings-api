@@ -1,11 +1,11 @@
-﻿using CodesCampaigns.Application.Commands;
-using CodesCampaigns.Application.Entities;
-using CodesCampaigns.Application.Repositories;
-using MediatR;
+﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Application.Commands;
+using CodesCampaigns.Domain.Entities;
+using CodesCampaigns.Domain.Repositories;
 
 namespace CodesCampaigns.Application.Handlers;
 
-public class CreateCampaignCommandHandler(ICampaignsRepository campaignsRepository) : IRequestHandler<CreateCampaignCommand>
+public class CreateCampaignCommandHandler(ICampaignsRepository campaignsRepository) : ICommandHandler<CreateCampaignCommand>
 {
     public async Task Handle(CreateCampaignCommand command, CancellationToken cancellationToken)
     {

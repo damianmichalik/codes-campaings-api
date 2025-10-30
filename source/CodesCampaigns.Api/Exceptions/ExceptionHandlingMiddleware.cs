@@ -1,4 +1,4 @@
-﻿using CodesCampaigns.Application.Exceptions;
+﻿using CodesCampaigns.Domain.Exceptions;
 
 namespace CodesCampaigns.Api.Exceptions;
 

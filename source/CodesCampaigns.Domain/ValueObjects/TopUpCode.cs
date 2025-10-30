@@ -1,6 +1,6 @@
-﻿using CodesCampaigns.Application.Exceptions;
+﻿using CodesCampaigns.Domain.Exceptions;
 
-namespace CodesCampaigns.Application.ValueObjects;
+namespace CodesCampaigns.Domain.ValueObjects;
 
 public sealed record TopUpCode
 {

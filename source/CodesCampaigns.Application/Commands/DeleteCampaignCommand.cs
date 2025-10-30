@@ -1,6 +1,6 @@
-﻿using CodesCampaigns.Application.ValueObjects;
-using MediatR;
+﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Domain.ValueObjects;
 
 namespace CodesCampaigns.Application.Commands;
 
-public record DeleteCampaignCommand(CampaignId CampaignId) : IRequest;
+public record DeleteCampaignCommand(CampaignId CampaignId) : ICommand;
