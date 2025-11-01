@@ -108,4 +108,26 @@ public class CampaignsController() : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("{campaignId:guid}/codes")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> GetCodes(
+        Guid campaignId,
+        IQueryHandler<GetCampaignCodesQuery, IEnumerable<TopUp>> queryHandler,
+        CancellationToken cancellationToken
+    )
+    {
+        var topUps = await queryHandler.Handle(new GetCampaignCodesQuery(
+            campaignId
+        ), cancellationToken);
+
+        var topUpDtos = topUps.Select((topUp) => new TopUpDto
+        {
+            Amount = topUp.Value.Amount,
+            Currency = topUp.Value.CurrencyCode.Code,
+            Code = topUp.Code,
+            CampaignId = topUp.CampaignId.Value
+        });
+        return Ok(topUpDtos);
+    }
 }

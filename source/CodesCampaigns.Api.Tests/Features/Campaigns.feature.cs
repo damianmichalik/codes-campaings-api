@@ -123,7 +123,7 @@ namespace CodesCampaigns.Api.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Campaigns.feature.ndjson", 23);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Campaigns.feature.ndjson", 24);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -1044,6 +1044,71 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 210
     await testRunner.AndAsync("there are 10 TopUps elements in the database", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Get campaign codes")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Campaigns management")]
+        [global::Xunit.TraitAttribute("Description", "Get campaign codes")]
+        public async global::System.Threading.Tasks.Task GetCampaignCodes()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "21";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Get campaign codes", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 212
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+                global::Reqnroll.Table table21 = new global::Reqnroll.Table(new string[] {
+                            "Code",
+                            "CampaignId",
+                            "Amount",
+                            "Currency"});
+                table21.AddRow(new string[] {
+                            "11111111-1111-1111-1111-111111111111",
+                            "22222222-2222-2222-2222-222222222222",
+                            "100",
+                            "USD"});
+                table21.AddRow(new string[] {
+                            "22222222-2222-2222-2222-222222222222",
+                            "22222222-2222-2222-2222-222222222222",
+                            "200",
+                            "PLN"});
+#line 213
+    await testRunner.GivenAsync("the following topups exist:", ((string)(null)), table21, "Given ");
+#line hidden
+                global::Reqnroll.Table table22 = new global::Reqnroll.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table22.AddRow(new string[] {
+                            "X-API-KEY",
+                            "my-super-secret-key"});
+#line 217
+    await testRunner.WhenAsync("I send a GET request to \"/api/campaigns/22222222-2222-2222-2222-222222222222/code" +
+                        "s\" with headers:", ((string)(null)), table22, "When ");
+#line hidden
+#line 220
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 221
+    await testRunner.AndAsync("the response should match JSON:", @"[
+  { ""code"": ""11111111-1111-1111-1111-111111111111"", ""amount"": 100, ""currency"": ""USD"", ""campaignId"": ""22222222-2222-2222-2222-222222222222"" },
+  { ""code"": ""22222222-2222-2222-2222-222222222222"", ""amount"": 200, ""currency"": ""PLN"", ""campaignId"": ""22222222-2222-2222-2222-222222222222"" }
+]", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

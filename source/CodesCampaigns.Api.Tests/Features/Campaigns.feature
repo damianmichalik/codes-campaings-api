@@ -208,3 +208,20 @@
     And I wait for the jobs to complete
     Then the response status code should be 204
     And there are 10 TopUps elements in the database
+    
+  Scenario: Get campaign codes
+    Given the following topups exist:
+      | Code                                 | CampaignId                           | Amount | Currency |
+      | 11111111-1111-1111-1111-111111111111 | 22222222-2222-2222-2222-222222222222 | 100    | USD      |
+      | 22222222-2222-2222-2222-222222222222 | 22222222-2222-2222-2222-222222222222 | 200    | PLN      |
+    When I send a GET request to "/api/campaigns/22222222-2222-2222-2222-222222222222/codes" with headers:
+      | Key       | Value               |
+      | X-API-KEY | my-super-secret-key |
+    Then the response status code should be 200
+    And the response should match JSON:
+    """
+    [
+      { "code": "11111111-1111-1111-1111-111111111111", "amount": 100, "currency": "USD", "campaignId": "22222222-2222-2222-2222-222222222222" },
+      { "code": "22222222-2222-2222-2222-222222222222", "amount": 200, "currency": "PLN", "campaignId": "22222222-2222-2222-2222-222222222222" }
+    ]
+    """    
