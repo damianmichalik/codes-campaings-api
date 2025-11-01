@@ -58,6 +58,30 @@ internal sealed class CampaignsSteps
         db.SaveChanges();
     }
     
+    [Given(@"the following topups exist:")]
+    public static void GivenTheFollowingTopUpsExist(Table table)
+    {
+        using var scope = FeatureHooks.Factory!.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        foreach (var row in table.Rows)
+        {
+            var campaignId = Guid.Parse(row["CampaignId"]);
+            var code = Guid.Parse(row["Code"]);
+            var amount = Convert.ToDecimal(row["Amount"], null);
+            var campaign = new TopUp
+            {
+                Code = code,
+                CampaignId = campaignId ,
+                Amount = amount,
+                Currency = row["Currency"]
+            };
+            db.TopUps.Add(campaign);
+        }
+
+        db.SaveChanges();
+    }
+    
     [When(@"I set the following headers:")]
     public void WhenISetTheFollowingHeaders(Table table)
     {
