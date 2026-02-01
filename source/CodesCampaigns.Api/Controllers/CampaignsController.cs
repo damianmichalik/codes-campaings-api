@@ -1,8 +1,10 @@
 ﻿using CodesCampaigns.Api.Authentication;
 using CodesCampaigns.Api.DTO;
+using CodesCampaigns.Api.Factories;
 using CodesCampaigns.Application.Abstractions;
 using CodesCampaigns.Application.Commands;
 using CodesCampaigns.Application.Queries;
+using CodesCampaigns.Domain.Abstractions;
 using CodesCampaigns.Domain.Entities;
 using CodesCampaigns.Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,7 @@ namespace CodesCampaigns.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiKey]
-public class CampaignsController() : ControllerBase
+public class CampaignsController(IClock clock) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetCampaigns(
@@ -24,12 +26,8 @@ public class CampaignsController() : ControllerBase
             new GetCampaignsQuery(), 
             cancellationToken
         );
-        var campaignDtos = campaigns.Select((campaign) => new CampaignDto
-        {
-            Id = campaign.Id.ToString(),
-            Name = campaign.Name,
-        });
-        return Ok(campaignDtos);
+        
+        return Ok(campaigns.Select(CampaignDtoFactory.CreateFromDomainCampaign));
     }
 
     [HttpGet("{campaignId:guid}")]
@@ -39,13 +37,12 @@ public class CampaignsController() : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        var campaign = await queryHandler.Handle(new GetCampaignQuery(campaignId), cancellationToken);
-        var campaignDto = new CampaignDto
-        {
-            Id = campaign.Id.ToString(),
-            Name = campaign.Name,
-        };
-        return Ok(campaignDto);
+        var campaign = await queryHandler.Handle(
+            new GetCampaignQuery(campaignId), 
+            cancellationToken
+        );
+        
+        return Ok(CampaignDtoFactory.CreateFromDomainCampaign(campaign));
     }
     
     [HttpPost]
@@ -56,7 +53,10 @@ public class CampaignsController() : ControllerBase
         CancellationToken cancellationToken)
     {
         var campaignId = CampaignId.Create();
-        await commandHandler.Handle(new CreateCampaignCommand(campaignId, createCampaignDto.Name), cancellationToken);
+        await commandHandler.Handle(
+            new CreateCampaignCommand(campaignId, createCampaignDto.Name),
+            cancellationToken
+        );
 
         return CreatedAtAction(nameof(GetCampaigns), new { id = campaignId.ToString() });
     }
@@ -85,7 +85,10 @@ public class CampaignsController() : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        await commandHandler.Handle(new UpdateCampaignCommand(campaignId, updateCampaignDto.Name), cancellationToken);
+        await commandHandler.Handle(
+            new UpdateCampaignCommand(campaignId, updateCampaignDto.Name), 
+            cancellationToken
+        );
 
         return NoContent();
     }
@@ -103,7 +106,8 @@ public class CampaignsController() : ControllerBase
             campaignId, 
             generateTopUpCodesDto.Count,
             generateTopUpCodesDto.Value,
-            generateTopUpCodesDto.Currency
+            generateTopUpCodesDto.Currency,
+            clock.Current
         ), cancellationToken);
 
         return NoContent();
@@ -120,14 +124,7 @@ public class CampaignsController() : ControllerBase
         var topUps = await queryHandler.Handle(new GetCampaignCodesQuery(
             campaignId
         ), cancellationToken);
-
-        var topUpDtos = topUps.Select((topUp) => new TopUpDto
-        {
-            Amount = topUp.Value.Amount,
-            Currency = topUp.Value.CurrencyCode.Code,
-            Code = topUp.Code,
-            CampaignId = topUp.CampaignId.Value
-        });
-        return Ok(topUpDtos);
+        
+        return Ok(topUps.Select(TopUpDtoFactory.CreateFromDomainTopUp));
     }
 }

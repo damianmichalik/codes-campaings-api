@@ -1,6 +1,8 @@
-﻿using CodesCampaigns.Domain.Repositories;
+﻿using CodesCampaigns.Domain.Abstractions;
+using CodesCampaigns.Domain.Repositories;
 using CodesCampaigns.Infrastructure.DAL;
 using CodesCampaigns.Infrastructure.Repositories;
+using CodesCampaigns.Infrastructure.Time;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,7 @@ public static class Registry
         
         services.AddScoped<ICampaignsRepository, CampaignsRepository>();
         services.AddScoped<ITopUpsRepository, TopUpsRepository>();
+        services.AddScoped<IClock, Clock>();
         
         services.AddHangfire(config =>
             config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)

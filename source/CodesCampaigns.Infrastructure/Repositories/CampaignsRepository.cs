@@ -3,7 +3,7 @@ using DomainCampaign = CodesCampaigns.Domain.Entities.Campaign;
 using CodesCampaigns.Domain.Repositories;
 using CodesCampaigns.Domain.ValueObjects;
 using CodesCampaigns.Infrastructure.DAL;
-using CodesCampaigns.Infrastructure.Entities;
+using CodesCampaigns.Infrastructure.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodesCampaigns.Infrastructure.Repositories;
@@ -12,11 +12,7 @@ public class CampaignsRepository(AppDbContext context) : ICampaignsRepository
 {
     public async Task Add(DomainCampaign campaign, CancellationToken cancellationToken)
     {
-        var campaignEntity = new Campaign
-        {
-            Name = campaign.Name
-        };
-        context.Campaigns.Add(campaignEntity);
+        context.Campaigns.Add(CampaignEntityFactory.CreateFromDomainCampaign(campaign));
         await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -31,9 +27,7 @@ public class CampaignsRepository(AppDbContext context) : ICampaignsRepository
             throw new CampaignNotFoundException(campaign.Id);
         }
         
-        campaignEntity.Name = campaign.Name;
-        
-        context.Campaigns.Update(campaignEntity);
+        context.Campaigns.Update(CampaignEntityFactory.UpdateFromDomainCampaign(campaignEntity, campaign));
         await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -44,7 +38,7 @@ public class CampaignsRepository(AppDbContext context) : ICampaignsRepository
 
     public async Task<List<DomainCampaign>> GetAll(CancellationToken cancellationToken)
         => await context.Campaigns
-            .Select(c => new DomainCampaign(new CampaignId(c.Id), c.Name))
+            .Select(campainEntity => DomainCampaignFactory.CreateFromCampaignEntity(campainEntity))
             .ToListAsync(cancellationToken);
 
     public async Task<DomainCampaign?> GetById(CampaignId campaignId, CancellationToken cancellationToken)
@@ -53,6 +47,6 @@ public class CampaignsRepository(AppDbContext context) : ICampaignsRepository
             .Where(c => c.Id == campaignId.Value)
             .FirstOrDefaultAsync(cancellationToken);
 
-        return campainEntity is null ? null : new DomainCampaign(new CampaignId(campainEntity.Id), campainEntity.Name);
+        return campainEntity is null ? null : DomainCampaignFactory.CreateFromCampaignEntity(campainEntity);
     }
 }

@@ -24,7 +24,7 @@ namespace CodesCampaigns.Api.Tests.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Campaigns management", "  As a developer\r\n  I want to have a set of endpoints to manage campaigns", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Campaigns management", "  As a developer\n  I want to have a set of endpoints to manage campaigns", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
         private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
@@ -188,8 +188,8 @@ namespace CodesCampaigns.Api.Tests.Features
     await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 16
-    await testRunner.AndAsync("the response should match JSON:", "[\r\n  { \"id\": \"11111111-1111-1111-1111-111111111111\", \"name\": \"Campaign One\" },\r\n " +
-                        " { \"id\": \"22222222-2222-2222-2222-222222222222\", \"name\": \"Campaign Two\" }\r\n]", ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("the response should match JSON:", "[\n  { \"id\": \"11111111-1111-1111-1111-111111111111\", \"name\": \"Campaign One\" },\n  {" +
+                        " \"id\": \"22222222-2222-2222-2222-222222222222\", \"name\": \"Campaign Two\" }\n]", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -475,7 +475,7 @@ namespace CodesCampaigns.Api.Tests.Features
     await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table7, "When ");
 #line hidden
 #line 64
-    await testRunner.AndAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"New Campaign\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I send a POST request to \"/api/campaigns\" with body:", "{\n  \"name\": \"New Campaign\"\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 70
     await testRunner.ThenAsync("the response status code should be 201", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -529,7 +529,7 @@ namespace CodesCampaigns.Api.Tests.Features
     await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table9, "When ");
 #line hidden
 #line 81
-    await testRunner.AndAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I send a POST request to \"/api/campaigns\" with body:", "{\n  \"name\": \"\"\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 87
     await testRunner.ThenAsync("the response status code should be 400", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -563,7 +563,7 @@ namespace CodesCampaigns.Api.Tests.Features
   await this.FeatureBackgroundAsync();
 #line hidden
 #line 90
-    await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\n  \"name\": \"new\"\n}", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 96
     await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -606,7 +606,7 @@ namespace CodesCampaigns.Api.Tests.Features
     await testRunner.WhenAsync("I set the following headers:", ((string)(null)), table10, "When ");
 #line hidden
 #line 102
-    await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send a POST request to \"/api/campaigns\" with body:", "{\n  \"name\": \"new\"\n}", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 108
     await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -650,7 +650,7 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 114
     await testRunner.AndAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
-                        "h body:", "{\r\n  \"name\": \"Updated campaign one\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+                        "h body:", "{\n  \"name\": \"Updated campaign one\"\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 120
     await testRunner.ThenAsync("the response status code should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -703,7 +703,7 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 130
     await testRunner.AndAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
-                        "h body:", "{\r\n  \"name\": \"\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+                        "h body:", "{\n  \"name\": \"\"\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 136
     await testRunner.ThenAsync("the response status code should be 400", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -747,7 +747,7 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 142
     await testRunner.AndAsync("I send a PUT request to \"/api/campaigns/33333333-3333-3333-3333-333333333333\" wit" +
-                        "h body:", "{\r\n  \"name\": \"Updated campaign\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+                        "h body:", "{\n  \"name\": \"Updated campaign\"\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 148
     await testRunner.ThenAsync("the response status code should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -782,7 +782,7 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 151
     await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
-                        "h body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                        "h body:", "{\n  \"name\": \"new\"\n}", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 157
     await testRunner.ThenAsync("the response status code should be 401", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -826,7 +826,7 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 163
     await testRunner.WhenAsync("I send a PUT request to \"/api/campaigns/11111111-1111-1111-1111-111111111111\" wit" +
-                        "h body:", "{\r\n  \"name\": \"new\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+                        "h body:", "{\n  \"name\": \"new\"\n}", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 169
     await testRunner.ThenAsync("the response status code should be 403", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -1034,7 +1034,7 @@ namespace CodesCampaigns.Api.Tests.Features
 #line hidden
 #line 200
     await testRunner.AndAsync("I send a POST request to \"/api/campaigns/11111111-1111-1111-1111-111111111111/cod" +
-                        "es\" with body:", "{\r\n  \"count\": 10,\r\n  \"value\": 20,\r\n  \"currency\": \"PLN\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+                        "es\" with body:", "{\n  \"count\": 10,\n  \"value\": 20,\n  \"currency\": \"PLN\"\n}", ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 208
     await testRunner.AndAsync("I wait for the jobs to complete", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

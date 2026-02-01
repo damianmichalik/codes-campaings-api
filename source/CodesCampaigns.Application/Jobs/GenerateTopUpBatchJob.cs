@@ -9,15 +9,14 @@ public class GenerateTopUpBatchJob(ITopUpsRepository topUpsRepository)
 {
     public async Task GenerateBatch(GenerateTopUpCodesCommand command, int count, CancellationToken cancellationToken)
     {
-        var topUps = new List<TopUp>([]);
+        var topUps = new List<TopUp>();
         for (var i = 0; i < count; i++)
         {
-            var topUp = new TopUp
-            {
-                Code = TopUpCode.Create(),
-                Value = new Money(command.Value, new CurrencyCode(command.Currency)),
-                CampaignId = command.CampaignId
-            };
+            var topUp = TopUp.Create(
+                TopUpCode.Create(),
+                new Money(command.Value, new CurrencyCode(command.Currency)),
+                command.CampaignId,
+                command.DateTime);
             topUps.Add(topUp);
         }
         await topUpsRepository.AddMany(topUps.AsReadOnly(), cancellationToken);

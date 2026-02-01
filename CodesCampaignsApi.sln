@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodesCampaigns.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodesCampaigns.Domain", "source\CodesCampaigns.Domain\CodesCampaigns.Domain.csproj", "{A80637FD-F4D0-40D3-9F8C-BC870FEC7259}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodesCampaigns.Infrastructure.Tests", "source\CodesCampaigns.Infrastructure.Tests\CodesCampaigns.Infrastructure.Tests.csproj", "{873E1F81-1A8B-4383-89C9-A1E8C29573CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{A80637FD-F4D0-40D3-9F8C-BC870FEC7259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A80637FD-F4D0-40D3-9F8C-BC870FEC7259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A80637FD-F4D0-40D3-9F8C-BC870FEC7259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{873E1F81-1A8B-4383-89C9-A1E8C29573CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{873E1F81-1A8B-4383-89C9-A1E8C29573CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{873E1F81-1A8B-4383-89C9-A1E8C29573CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{873E1F81-1A8B-4383-89C9-A1E8C29573CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
