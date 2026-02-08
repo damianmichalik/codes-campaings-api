@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="CodesCampaigns.Infrastructure" />
+        <InternalsVisibleTo Include="CodesCampaigns.Infrastructure.Tests" />
+        <InternalsVisibleTo Include="CodesCampaigns.Api.Tests" />
+    </ItemGroup>
+
 </Project>

@@ -4,7 +4,7 @@ namespace CodesCampaigns.Domain.ValueObjects;
 
 public sealed record TopUpCode
 {
-    public Guid Value { get; set; }
+    public Guid Value { get; }
 
     public TopUpCode(Guid value)
     {
