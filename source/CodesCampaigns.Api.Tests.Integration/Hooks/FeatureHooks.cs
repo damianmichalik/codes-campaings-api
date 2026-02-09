@@ -1,11 +1,11 @@
-﻿using CodesCampaigns.Api.Tests.TestUtilities;
+﻿using CodesCampaigns.Api.Tests.Integration.TestUtilities;
 using CodesCampaigns.Infrastructure.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll;
 using Testcontainers.PostgreSql;
 
-namespace CodesCampaigns.Api.Tests.Hooks;
+namespace CodesCampaigns.Api.Tests.Integration.Hooks;
 
 [Binding]
 internal sealed class FeatureHooks
