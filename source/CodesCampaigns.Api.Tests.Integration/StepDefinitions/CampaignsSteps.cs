@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using CodesCampaigns.Api.Tests.Hooks;
+using CodesCampaigns.Api.Tests.Integration.Hooks;
 using CodesCampaigns.Infrastructure.DAL;
 using CodesCampaigns.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll;
 
-namespace CodesCampaigns.Api.Tests.StepDefinitions;
+namespace CodesCampaigns.Api.Tests.Integration.StepDefinitions;
 
 [Binding]
 internal sealed class CampaignsSteps
@@ -45,7 +45,7 @@ internal sealed class CampaignsSteps
 
         foreach (var row in table.Rows)
         {
-            var id = Guid.Parse(row["Id"]);
+            var id = Guid.Parse((string)row["Id"]);
             var name = row["Name"];
             var campaign = new Campaign
             {
@@ -66,9 +66,9 @@ internal sealed class CampaignsSteps
 
         foreach (var row in table.Rows)
         {
-            var campaignId = Guid.Parse(row["CampaignId"]);
-            var code = Guid.Parse(row["Code"]);
-            var amount = Convert.ToDecimal(row["Amount"], null);
+            var campaignId = Guid.Parse((string)row["CampaignId"]);
+            var code = Guid.Parse((string)row["Code"]);
+            var amount = Convert.ToDecimal((string?)row["Amount"], null);
             var campaign = new TopUp
             {
                 Code = code,
@@ -159,8 +159,8 @@ internal sealed class CampaignsSteps
         Assert.NotNull(entityType);
 
         // Find DbSet<T> property in DbContext
-        var dbSetProp = db.GetType().GetProperties()
-            .FirstOrDefault(p =>
+        var dbSetProp = Enumerable
+            .FirstOrDefault<PropertyInfo>(db.GetType().GetProperties(), p =>
                 p.PropertyType.IsGenericType &&
                 p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>) &&
                 p.PropertyType.GetGenericArguments()[0] == entityType);
@@ -185,7 +185,7 @@ internal sealed class CampaignsSteps
         foreach (var expected in expectedRows)
         {
             bool found = entities.Any(e =>
-                expected.Keys.All(col =>
+                Enumerable.All<string>(expected.Keys, col =>
                 {
                     var prop = entityType.GetProperty(col,
                         BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
@@ -199,7 +199,7 @@ internal sealed class CampaignsSteps
                 }));
 
             Assert.True(found,
-                $"Expected entity with values [{string.Join(", ", expected.Select(kv => $"{kv.Key}={kv.Value}"))}] not found in database.");
+                $"Expected entity with values [{string.Join(", ", Enumerable.Select<KeyValuePair<string, string>, string>(expected, kv => $"{kv.Key}={kv.Value}"))}] not found in database.");
         }
     }
     
@@ -221,8 +221,8 @@ internal sealed class CampaignsSteps
         Assert.NotNull(entityType);
 
         // Find DbSet<T> property in DbContext
-        var dbSetProp = db.GetType().GetProperties()
-            .FirstOrDefault(p =>
+        var dbSetProp = Enumerable
+            .FirstOrDefault<PropertyInfo>(db.GetType().GetProperties(), p =>
                 p.PropertyType.IsGenericType &&
                 p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>) &&
                 p.PropertyType.GetGenericArguments()[0] == entityType);
