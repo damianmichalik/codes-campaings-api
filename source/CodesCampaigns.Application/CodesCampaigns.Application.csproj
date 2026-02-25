@@ -6,4 +6,7 @@
     <ItemGroup>
       <ProjectReference Include="..\CodesCampaigns.Domain\CodesCampaigns.Domain.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <InternalsVisibleTo Include="CodesCampaigns.Application.Tests" />
+    </ItemGroup>
 </Project>

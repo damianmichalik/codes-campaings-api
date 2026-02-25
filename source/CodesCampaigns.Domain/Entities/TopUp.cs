@@ -13,7 +13,7 @@ public class TopUp
     public DateTime? ActiveFrom { get; }
     public DateTime? ActiveTo { get; }
     public DateTime? WalletExpirationDate { get; }
-    public string? PartnerCode { get; }
+    public string? PartnerCode { get; private set; }
 
     internal TopUp(
         TopUpCode code,
@@ -44,4 +44,11 @@ public class TopUp
         Money value,
         CampaignId campaignId,
         DateTime createdAt) => new(code, value, campaignId, createdAt);
+
+    public void Use(string email, string partnerCode, DateTime usedAt)
+    {
+        Email = email;
+        PartnerCode = partnerCode;
+        UsedAt = usedAt;
+    }
 }

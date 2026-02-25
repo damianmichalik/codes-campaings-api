@@ -10,7 +10,7 @@ public static class DomainTopUpFactory
         => new(
             new TopUpCode(topUp.Code),
             new Money(topUp.Amount, new CurrencyCode(topUp.Currency)),
-            new CampaignId(topUp.CampaignId!.Value),
+            new CampaignId(topUp.CampaignId),
             topUp.CreatedAt,
             topUp.Email,
             topUp.UsedAt,
