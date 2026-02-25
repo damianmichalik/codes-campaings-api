@@ -28,7 +28,7 @@ public class DomainTopUpFactoryTest
         Assert.Equal(code, actualDomainTopUp.Code.Value);
         Assert.Equal(amount, actualDomainTopUp.Value.Amount);
         Assert.Equal(currency, actualDomainTopUp.Value.CurrencyCode.Code);
-        Assert.Equal(campaignId, actualDomainTopUp.CampaignId.Value);
+        Assert.Equal(campaignId, actualDomainTopUp.CampaignId!.Value);
         Assert.Equal(createdAt, actualDomainTopUp.CreatedAt);
         Assert.Null(actualDomainTopUp.Email);
         Assert.Null(actualDomainTopUp.UsedAt);
@@ -73,7 +73,7 @@ public class DomainTopUpFactoryTest
         Assert.Equal(code, actualDomainTopUp.Code.Value);
         Assert.Equal(amount, actualDomainTopUp.Value.Amount);
         Assert.Equal(currency, actualDomainTopUp.Value.CurrencyCode.Code);
-        Assert.Equal(campaignId, actualDomainTopUp.CampaignId.Value);
+        Assert.Equal(campaignId, actualDomainTopUp.CampaignId!.Value);
         Assert.Equal(createdAt, actualDomainTopUp.CreatedAt);
         Assert.Equal(email, actualDomainTopUp.Email);
         Assert.Equal(usedAt, actualDomainTopUp.UsedAt);

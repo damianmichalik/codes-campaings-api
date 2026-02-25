@@ -34,4 +34,30 @@ public class TopUpsRepository(AppDbContext context) : ITopUpsRepository
             .Select(DomainTopUpFactory.CreateFromTopUpEntity)
             .ToList();
     }
+
+    public async Task<DomainTopUp?> GetByCode(TopUpCode code, CancellationToken cancellationToken)
+    {
+        var entity = await context.TopUps
+            .FirstOrDefaultAsync(t => t.Code == code.Value, cancellationToken);
+
+        return entity is null ? null : DomainTopUpFactory.CreateFromTopUpEntity(entity);
+    }
+
+    public async Task Update(DomainTopUp topUp, CancellationToken cancellationToken)
+    {
+        var entity = await context.TopUps
+            .FirstOrDefaultAsync(t => t.Code == topUp.Code.Value, cancellationToken);
+
+        if (entity is null)
+        {
+            return;
+        }
+
+        entity.Email = topUp.Email;
+        entity.UsedAt = topUp.UsedAt;
+        entity.PartnerCode = topUp.PartnerCode;
+        entity.UpdatedAt = topUp.UsedAt;
+
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }

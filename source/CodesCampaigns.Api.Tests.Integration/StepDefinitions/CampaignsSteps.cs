@@ -101,6 +101,10 @@ internal sealed class CampaignsSteps
     [When(@"I send a (POST|PUT|PATCH) request to ""(.*)"" with body:")]
     public async Task WhenISendARequestToWithBody(string method, string endpoint, string body)
         => await SendRequestAsync(method, endpoint, body);
+
+    [When(@"I send a (POST|PUT|PATCH) request to ""(.*)"" with json:")]
+    public async Task WhenISendARequestToWithJson(string method, string endpoint, string body)
+        => await SendRequestAsync(method, endpoint, body);
     
     [When(@"I send a (GET|DELETE|POST|PUT|PATCH) request to ""(.*)"" with headers:")]
     public async Task WhenISendARequestToWithHeaders(string method, string endpoint, Table table)
@@ -118,15 +122,26 @@ internal sealed class CampaignsSteps
         => await Task.Delay(200);
 
     [Then(@"the response status code should be (\d+)")]
-    public void ThenTheResponseStatusCodeShouldBe(int expectedStatusCode)
+    public async Task ThenTheResponseStatusCodeShouldBe(int expectedStatusCode)
     {
         Assert.NotNull(_response);
         var actualStatusCode = (int)_response!.StatusCode;
-        Assert.Equal(expectedStatusCode, actualStatusCode);
+        if (actualStatusCode != expectedStatusCode)
+        {
+            var body = await _response.Content.ReadAsStringAsync();
+            Assert.Fail($"Expected status {expectedStatusCode} but got {actualStatusCode}. Body: {body}");
+        }
     }
     
+    [Then(@"the JSON should be equal to:")]
+    public async Task ThenTheJsonShouldBeEqualTo(string expectedJson)
+        => await AssertJsonEqual(expectedJson);
+
     [Then(@"the response should match JSON:")]
     public async Task ThenTheResponseShouldMatchJson(string expectedJson)
+        => await AssertJsonEqual(expectedJson);
+
+    private async Task AssertJsonEqual(string expectedJson)
     {
         var actualJson = await _response!.Content.ReadAsStringAsync();
 
@@ -137,7 +152,7 @@ internal sealed class CampaignsSteps
         // Serialize normalized JSON for comparison
         static string Normalize(JsonDocument doc) =>
             JsonSerializer.Serialize(doc, WriteOptions);
-        
+
         Assert.Equal(Normalize(expectedDoc), Normalize(actualDoc));
     }
     
@@ -243,6 +258,80 @@ internal sealed class CampaignsSteps
         Assert.Equal(expectedCount, entities.Count());
     }
     
+    [Given(@"there is top up code to use ""(.*)"" of (\d+) PLN for campaign ""(.*)""")]
+    public static void GivenThereIsTopUpCodeForCampaign(string code, int amount, string campaignName)
+    {
+        var campaignId = Guid.NewGuid();
+
+        using (var scope = FeatureHooks.Factory!.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            if (!db.Campaigns.Any(c => c.Name == campaignName))
+            {
+                db.Campaigns.Add(new Campaign { Id = campaignId, Name = campaignName });
+                db.SaveChanges();
+            }
+            else
+            {
+                campaignId = db.Campaigns
+                    .AsNoTracking()
+                    .Where(c => c.Name == campaignName)
+                    .Select(c => c.Id)
+                    .First();
+            }
+        }
+
+        using var topUpScope = FeatureHooks.Factory!.Services.CreateScope();
+        var topUpDb = topUpScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        topUpDb.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN",
+            CampaignId = campaignId
+        });
+        topUpDb.SaveChanges();
+    }
+
+    [Given(@"there is top up code to use ""(.*)"" of (\d+) PLN without campaign")]
+    public static void GivenThereIsTopUpCodeWithoutCampaign(string code, int amount)
+    {
+        using var scope = FeatureHooks.Factory!.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        db.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN"
+        });
+        db.SaveChanges();
+    }
+
+    [Given(@"Today's date is ""(.*)""")]
+    public static void GivenTodaysDateIs(string date)
+    {
+        var parsed = DateTime.Parse(date, null, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
+        FeatureHooks.Factory!.FakeClock.Current = parsed;
+    }
+
+    [Given(@"I added json content type to header")]
+    public static void GivenIAddedJsonContentTypeToHeader()
+    {
+        // Content-Type is automatically set to application/json by StringContent in SendRequestAsync
+    }
+
+    [Then(@"the top up code ""(.*)"" is used")]
+    public static void ThenTheTopUpCodeIsUsed(string code)
+    {
+        using var scope = FeatureHooks.Factory!.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var topUp = db.TopUps.FirstOrDefault(t => t.Code == Guid.Parse(code));
+        Assert.NotNull(topUp);
+        Assert.NotNull(topUp.UsedAt);
+    }
+
     private async Task SendRequestAsync(string method, string endpoint, string? body)
     {
         var client = FeatureHooks.Factory!.CreateClient();

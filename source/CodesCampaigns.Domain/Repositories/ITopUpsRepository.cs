@@ -8,4 +8,6 @@ public interface ITopUpsRepository
     Task Add(TopUp topUp, CancellationToken cancellationToken);
     Task AddMany(IReadOnlyCollection<TopUp> topUps, CancellationToken cancellationToken);
     Task<List<TopUp>> GetByCampaignId(CampaignId campaignId, CancellationToken cancellationToken);
+    Task<TopUp?> GetByCode(TopUpCode code, CancellationToken cancellationToken);
+    Task Update(TopUp topUp, CancellationToken cancellationToken);
 }

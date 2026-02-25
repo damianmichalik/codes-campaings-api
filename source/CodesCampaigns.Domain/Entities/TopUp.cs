@@ -6,19 +6,19 @@ public class TopUp
 {
     public TopUpCode Code { get; }
     public Money Value { get; }
-    public CampaignId CampaignId { get; }
+    public CampaignId? CampaignId { get; }
     public string? Email { get; private set; }
     public DateTime CreatedAt { get; }
     public DateTime? UsedAt { get; private set; }
     public DateTime? ActiveFrom { get; }
     public DateTime? ActiveTo { get; }
     public DateTime? WalletExpirationDate { get; }
-    public string? PartnerCode { get; }
+    public string? PartnerCode { get; private set; }
 
     internal TopUp(
         TopUpCode code,
         Money value,
-        CampaignId campaignId,
+        CampaignId? campaignId,
         DateTime createdAt,
         string? email = null,
         DateTime? usedAt = null,
@@ -42,6 +42,13 @@ public class TopUp
     public static TopUp Create(
         TopUpCode code,
         Money value,
-        CampaignId campaignId,
+        CampaignId? campaignId,
         DateTime createdAt) => new(code, value, campaignId, createdAt);
+
+    public void Use(string email, string partnerCode, DateTime usedAt)
+    {
+        Email = email;
+        PartnerCode = partnerCode;
+        UsedAt = usedAt;
+    }
 }
