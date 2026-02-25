@@ -11,7 +11,7 @@ public static class TopUpEntityFactory
             Code = domainTopUp.Code,
             Amount = domainTopUp.Value.Amount,
             Currency = domainTopUp.Value.CurrencyCode.Code,
-            CampaignId = domainTopUp.CampaignId,
+            CampaignId = domainTopUp.CampaignId?.Value,
             Email = domainTopUp.Email,
             CreatedAt = domainTopUp.CreatedAt,
             UsedAt = domainTopUp.UsedAt,

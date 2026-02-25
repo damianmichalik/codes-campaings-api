@@ -11,6 +11,6 @@ public static class TopUpDtoFactory
             Amount = domainTopUp.Value.Amount,
             Currency = domainTopUp.Value.CurrencyCode.Code,
             Code = domainTopUp.Code,
-            CampaignId = domainTopUp.CampaignId.Value
+            CampaignId = domainTopUp.CampaignId?.Value
         };
 }

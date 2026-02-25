@@ -1,4 +1,6 @@
-﻿using CodesCampaigns.Infrastructure.DAL;
+﻿using CodesCampaigns.Domain.Abstractions;
+using CodesCampaigns.Infrastructure.DAL;
+using CodesCampaigns.Infrastructure.Time;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -10,6 +12,8 @@ namespace CodesCampaigns.Api.Tests.Integration.TestUtilities;
 
 internal sealed class CustomWebApplicationFactory(string connectionString) : WebApplicationFactory<Program>
 {
+    public FakeClock FakeClock { get; } = new() { Current = DateTime.UtcNow };
+
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -24,7 +28,15 @@ internal sealed class CustomWebApplicationFactory(string connectionString) : Web
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
-            
+
+            var clockDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IClock));
+            if (clockDescriptor != null)
+            {
+                services.Remove(clockDescriptor);
+            }
+
+            services.AddSingleton<IClock>(FakeClock);
+
             var hangfireDescriptor = services.FirstOrDefault(
                 d => d.ServiceType == typeof(IGlobalConfiguration));
             if (hangfireDescriptor != null)
