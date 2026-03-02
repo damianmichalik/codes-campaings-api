@@ -1,4 +1,5 @@
 ﻿using CodesCampaigns.Application.Abstractions;
+using CodesCampaigns.Application.Commands;
 using CodesCampaigns.Application.Handlers;
 using CodesCampaigns.Application.Jobs;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,11 +13,15 @@ public static class Registry
     )
     {
         services.AddScoped<GenerateTopUpBatchJob>();
+        services.AddScoped<ICommandHandler<UseTopUpCodeCommand, UseTopUpCodeResult>, UseTopUpCodeCommandHandler>();
         services.Scan(scan => scan.FromAssembliesOf(typeof(CreateCampaignCommandHandler))
             .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
             .AsImplementedInterfaces()
             .WithScopedLifetime()
             .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         

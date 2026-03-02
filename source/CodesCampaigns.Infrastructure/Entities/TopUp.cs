@@ -11,7 +11,7 @@ public class TopUp : BaseEntity
     public required decimal Amount { get; set; }
     [MaxLength(3)]
     public required string Currency { get; set; }
-    public Guid? CampaignId { get; set; }
+    public required Guid CampaignId { get; set; }
     [MaxLength(100)]
     public string? Email { get; set; }
     public DateTime? UsedAt { get; set; }
