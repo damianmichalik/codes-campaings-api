@@ -1,4 +1,4 @@
-﻿using DomainTopUp = CodesCampaigns.Domain.Entities.TopUp;
+using DomainTopUp = CodesCampaigns.Domain.Entities.TopUp;
 using CodesCampaigns.Domain.Repositories;
 using CodesCampaigns.Domain.ValueObjects;
 using CodesCampaigns.Infrastructure.DAL;
@@ -42,6 +42,17 @@ public class TopUpsRepository(AppDbContext context) : ITopUpsRepository
 
         return entity is null ? null : DomainTopUpFactory.CreateFromTopUpEntity(entity);
     }
+
+    public Task<int> CountUsedByEmailAndCampaignForMonth(
+        string email, CampaignId campaignId, int year, int month, CancellationToken cancellationToken)
+        => context.TopUps
+            .Where(t => t.CampaignId == campaignId.Value
+                && t.UsedAt.HasValue
+                && t.UsedAt.Value.Year == year
+                && t.UsedAt.Value.Month == month
+                && t.Email != null
+                && EF.Functions.ILike(t.Email, email))
+            .CountAsync(cancellationToken);
 
     public async Task Update(DomainTopUp topUp, CancellationToken cancellationToken)
     {

@@ -317,6 +317,67 @@ internal sealed class CampaignsSteps
         Assert.NotNull(topUp.UsedAt);
     }
 
+    [Then(@"the top-up code ""(.*)"" is not used")]
+    public static void ThenTheTopUpCodeIsNotUsed(string code)
+    {
+        using var scope = FeatureHooks.Factory!.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var topUp = db.TopUps.FirstOrDefault(t => t.Code == Guid.Parse(code));
+        Assert.NotNull(topUp);
+        Assert.Null(topUp.UsedAt);
+    }
+
+    [Given(@"there is used top up code ""([^""]*)"" of (\d+) PLN for campaign ""([^""]*)"" at ""([^""]*)""")]
+    public static void GivenThereIsUsedTopUpCodeForCampaignAt(string code, int amount, string campaignName, string dateStr)
+    {
+        var usedAt = DateTime.Parse(dateStr, null, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
+        CreateUsedTopUp(code, amount, campaignName, usedAt);
+    }
+
+    [Given(@"there is used top up code ""([^""]*)"" of (\d+) PLN for campaign ""([^""]*)""")]
+    public static void GivenThereIsUsedTopUpCodeForCampaign(string code, int amount, string campaignName)
+    {
+        var usedAt = FeatureHooks.Factory!.FakeClock.Current;
+        CreateUsedTopUp(code, amount, campaignName, usedAt);
+    }
+
+    private static void CreateUsedTopUp(string code, int amount, string campaignName, DateTime usedAt)
+    {
+        var campaignId = Guid.NewGuid();
+
+        using (var scope = FeatureHooks.Factory!.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            if (!db.Campaigns.Any(c => c.Name == campaignName))
+            {
+                db.Campaigns.Add(new Campaign { Id = campaignId, Name = campaignName });
+                db.SaveChanges();
+            }
+            else
+            {
+                campaignId = db.Campaigns
+                    .AsNoTracking()
+                    .Where(c => c.Name == campaignName)
+                    .Select(c => c.Id)
+                    .First();
+            }
+        }
+
+        using var topUpScope = FeatureHooks.Factory!.Services.CreateScope();
+        var topUpDb = topUpScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        topUpDb.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN",
+            CampaignId = campaignId,
+            Email = "test@domain.com",
+            UsedAt = usedAt
+        });
+        topUpDb.SaveChanges();
+    }
+
     private async Task SendRequestAsync(string method, string endpoint, string? body)
     {
         var client = FeatureHooks.Factory!.CreateClient();
