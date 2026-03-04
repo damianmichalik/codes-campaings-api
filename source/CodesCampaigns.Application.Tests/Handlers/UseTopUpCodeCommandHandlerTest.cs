@@ -14,15 +14,22 @@ public class UseTopUpCodeCommandHandlerTest
     private static readonly Money ValidMoney = new(10m, new CurrencyCode("PLN"));
 
     private readonly ITopUpsRepository _repository;
+    private readonly ICampaignsRepository _campaignsRepository;
     private readonly IClock _clock;
     private readonly UseTopUpCodeCommandHandler _handler;
 
     public UseTopUpCodeCommandHandlerTest()
     {
         _repository = Substitute.For<ITopUpsRepository>();
+        _campaignsRepository = Substitute.For<ICampaignsRepository>();
         _clock = Substitute.For<IClock>();
         _clock.Current.Returns(FixedTime);
-        _handler = new UseTopUpCodeCommandHandler(_repository, _clock);
+        _campaignsRepository.GetById(Arg.Any<CampaignId>(), Arg.Any<CancellationToken>())
+            .Returns((Campaign?)null);
+        _repository.CountUsedByEmailAndCampaignForMonth(
+                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(0);
+        _handler = new UseTopUpCodeCommandHandler(_repository, _campaignsRepository, _clock);
     }
 
     [Fact]
@@ -112,5 +119,42 @@ public class UseTopUpCodeCommandHandlerTest
         await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "user@example.com"), CancellationToken.None);
 
         await _repository.Received(1).Update(topUp, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ItReturnsUsageLimitExceededWhenMonthlyLimitReached()
+    {
+        var code = Guid.NewGuid();
+        var campaignId = CampaignId.Create();
+        var topUp = TopUp.Create(new TopUpCode(code), ValidMoney, campaignId, FixedTime);
+        var campaign = Campaign.Create(campaignId, "Test", _clock, maxNumberOfTopUpsPerUser: 3);
+        _repository.GetByCode(Arg.Any<TopUpCode>(), Arg.Any<CancellationToken>()).Returns(topUp);
+        _campaignsRepository.GetById(campaignId, Arg.Any<CancellationToken>()).Returns(campaign);
+        _repository.CountUsedByEmailAndCampaignForMonth(
+                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(3);
+
+        var result = await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "user@example.com"), CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal("usage_limit_exceeded", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ItDoesNotUpdateRepositoryWhenMonthlyLimitReached()
+    {
+        var code = Guid.NewGuid();
+        var campaignId = CampaignId.Create();
+        var topUp = TopUp.Create(new TopUpCode(code), ValidMoney, campaignId, FixedTime);
+        var campaign = Campaign.Create(campaignId, "Test", _clock, maxNumberOfTopUpsPerUser: 3);
+        _repository.GetByCode(Arg.Any<TopUpCode>(), Arg.Any<CancellationToken>()).Returns(topUp);
+        _campaignsRepository.GetById(campaignId, Arg.Any<CancellationToken>()).Returns(campaign);
+        _repository.CountUsedByEmailAndCampaignForMonth(
+                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(3);
+
+        await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "user@example.com"), CancellationToken.None);
+
+        await _repository.DidNotReceive().Update(Arg.Any<TopUp>(), Arg.Any<CancellationToken>());
     }
 }

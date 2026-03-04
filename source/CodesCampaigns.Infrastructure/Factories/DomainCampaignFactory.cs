@@ -1,4 +1,4 @@
-﻿using CodesCampaigns.Domain.ValueObjects;
+using CodesCampaigns.Domain.ValueObjects;
 using CodesCampaigns.Infrastructure.Entities;
 using DomainCampaign = CodesCampaigns.Domain.Entities.Campaign;
 
@@ -11,6 +11,7 @@ public static class DomainCampaignFactory
             new CampaignId(campaign.Id),
             campaign.Name,
             campaign.CreatedAt,
-            campaign.UpdatedAt
+            campaign.UpdatedAt,
+            campaign.MaxNumberOfTopUpsPerUser
         );
 }

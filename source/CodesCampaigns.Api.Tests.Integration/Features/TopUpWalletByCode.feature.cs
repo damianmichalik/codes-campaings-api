@@ -121,7 +121,7 @@ namespace CodesCampaigns.Api.Tests.Integration.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/TopUpWalletByCode.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/TopUpWalletByCode.feature.ndjson", 7);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -185,6 +185,236 @@ namespace CodesCampaigns.Api.Tests.Integration.Features
 #line hidden
 #line 26
     await testRunner.AndAsync("the top up code \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee57d\" is used", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unsuccessful wallet top-up more than 3 times in a month per user and campaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Use wallet top up code")]
+        [global::Xunit.TraitAttribute("Description", "Unsuccessful wallet top-up more than 3 times in a month per user and campaign")]
+        public async global::System.Threading.Tasks.Task UnsuccessfulWalletTop_UpMoreThan3TimesInAMonthPerUserAndCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "1";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unsuccessful wallet top-up more than 3 times in a month per user and campaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 28
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 29
+    await testRunner.GivenAsync("Today\'s date is \"2017-01-28\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 30
+    await testRunner.AndAsync("there is used top up code \"54d86883-d5ef-45c3-b96f-756cdd7fe1e9\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-01\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 31
+    await testRunner.AndAsync("there is used top up code \"cb9e4ee3-5d3f-432b-aca5-85eb2301a72c\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-23\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 32
+    await testRunner.AndAsync("there is used top up code \"404b8249-c3f8-4edd-b832-a5942f308504\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-28\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 33
+    await testRunner.WhenAsync("I send a POST request to \"/api/v1/top_up_codes\" with json:", "{\r\n  \"partnerCode\": \"PARTNER_CODE\",\r\n  \"code\": \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee" +
+                        "57d\",\r\n  \"email\": \"test@domain.com\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 41
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 42
+    await testRunner.AndAsync("the JSON should be equal to:", "{\r\n  \"success\": false,\r\n  \"error_code\": \"usage_limit_exceeded\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 49
+    await testRunner.AndAsync("the top-up code \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee57d\" is not used", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Successful 4th wallet top-up after three in the last month within the same campai" +
+            "gn and user")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Use wallet top up code")]
+        [global::Xunit.TraitAttribute("Description", "Successful 4th wallet top-up after three in the last month within the same campai" +
+            "gn and user")]
+        public async global::System.Threading.Tasks.Task Successful4ThWalletTop_UpAfterThreeInTheLastMonthWithinTheSameCampaignAndUser()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "2";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Successful 4th wallet top-up after three in the last month within the same campai" +
+                    "gn and user", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 51
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 52
+    await testRunner.GivenAsync("Today\'s date is \"2017-02-01\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 53
+    await testRunner.AndAsync("there is used top up code \"54d86883-d5ef-45c3-b96f-756cdd7fe1e9\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-01\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 54
+    await testRunner.AndAsync("there is used top up code \"cb9e4ee3-5d3f-432b-aca5-85eb2301a72c\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-23\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 55
+    await testRunner.AndAsync("there is used top up code \"404b8249-c3f8-4edd-b832-a5942f308504\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-28\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 56
+    await testRunner.WhenAsync("I send a POST request to \"/api/v1/top_up_codes\" with json:", "{\r\n  \"partnerCode\": \"PARTNER_CODE\",\r\n  \"code\": \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee" +
+                        "57d\",\r\n  \"email\": \"test@domain.com\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 64
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 65
+    await testRunner.AndAsync("the JSON should be equal to:", "{\r\n  \"success\": true\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 71
+    await testRunner.AndAsync("the top up code \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee57d\" is used", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Successful wallet top-up more than 3 times in a month per user using different ca" +
+            "mpaign")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Use wallet top up code")]
+        [global::Xunit.TraitAttribute("Description", "Successful wallet top-up more than 3 times in a month per user using different ca" +
+            "mpaign")]
+        public async global::System.Threading.Tasks.Task SuccessfulWalletTop_UpMoreThan3TimesInAMonthPerUserUsingDifferentCampaign()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "3";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Successful wallet top-up more than 3 times in a month per user using different ca" +
+                    "mpaign", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 73
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 74
+    await testRunner.GivenAsync("there is used top up code \"1406b31b-5c0f-4e1e-bd04-589422b7708c\" of 100 PLN for c" +
+                        "ampaign \"ANOTHERCAMPAIGN\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 75
+    await testRunner.AndAsync("there is used top up code \"57db4e26-a77b-4cef-b575-7768cc7df50d\" of 100 PLN for c" +
+                        "ampaign \"ANOTHERCAMPAIGN\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 76
+    await testRunner.AndAsync("there is used top up code \"e1a38a05-e984-4a64-8b52-1c9043b52026\" of 100 PLN for c" +
+                        "ampaign \"ANOTHERCAMPAIGN\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 77
+    await testRunner.WhenAsync("I send a POST request to \"/api/v1/top_up_codes\" with json:", "{\r\n  \"partnerCode\": \"PARTNER_CODE\",\r\n  \"code\": \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee" +
+                        "57d\",\r\n  \"email\": \"test@domain.com\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 85
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 86
+    await testRunner.AndAsync("the JSON should be equal to:", "{\r\n  \"success\": true\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 92
+    await testRunner.AndAsync("the top up code \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee57d\" is used", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Unsuccessful wallet top-up more than 3 times in a month per user and campaign on " +
+            "the first day of the month")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Use wallet top up code")]
+        [global::Xunit.TraitAttribute("Description", "Unsuccessful wallet top-up more than 3 times in a month per user and campaign on " +
+            "the first day of the month")]
+        public async global::System.Threading.Tasks.Task UnsuccessfulWalletTop_UpMoreThan3TimesInAMonthPerUserAndCampaignOnTheFirstDayOfTheMonth()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "4";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Unsuccessful wallet top-up more than 3 times in a month per user and campaign on " +
+                    "the first day of the month", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 94
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 5
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 95
+    await testRunner.GivenAsync("Today\'s date is \"2017-01-01 11:24:30\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 96
+    await testRunner.AndAsync("there is used top up code \"54d86883-d5ef-45c3-b96f-756cdd7fe1e9\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-01 08:00:00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 97
+    await testRunner.AndAsync("there is used top up code \"cb9e4ee3-5d3f-432b-aca5-85eb2301a72c\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-01 09:00:00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 98
+    await testRunner.AndAsync("there is used top up code \"404b8249-c3f8-4edd-b832-a5942f308504\" of 100 PLN for c" +
+                        "ampaign \"TEST\" at \"2017-01-01 10:00:00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 99
+    await testRunner.WhenAsync("I send a POST request to \"/api/v1/top_up_codes\" with json:", "{\r\n  \"partnerCode\": \"PARTNER_CODE\",\r\n  \"code\": \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee" +
+                        "57d\",\r\n  \"email\": \"test@domain.com\"\r\n}", ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 107
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 108
+    await testRunner.AndAsync("the JSON should be equal to:", "{\r\n  \"success\": false,\r\n  \"error_code\": \"usage_limit_exceeded\"\r\n}", ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 115
+    await testRunner.AndAsync("the top-up code \"826d3c3e-f0ff-4f3e-b2f3-8f5cb97ee57d\" is not used", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
