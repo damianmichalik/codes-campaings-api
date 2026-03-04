@@ -43,6 +43,14 @@ public class TopUpsRepository(AppDbContext context) : ITopUpsRepository
         return entity is null ? null : DomainTopUpFactory.CreateFromTopUpEntity(entity);
     }
 
+    public Task<int> CountUsedByEmailAndCampaign(string email, CampaignId campaignId, CancellationToken cancellationToken)
+        => context.TopUps
+            .Where(t => t.CampaignId == campaignId.Value
+                && t.UsedAt.HasValue
+                && t.Email != null
+                && EF.Functions.ILike(t.Email, email))
+            .CountAsync(cancellationToken);
+
     public Task<int> CountUsedByEmailAndCampaignForMonth(
         string email, CampaignId campaignId, int year, int month, CancellationToken cancellationToken)
         => context.TopUps

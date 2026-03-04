@@ -26,10 +26,31 @@ public class UseTopUpCodeCommandHandlerTest
         _clock.Current.Returns(FixedTime);
         _campaignsRepository.GetById(Arg.Any<CampaignId>(), Arg.Any<CancellationToken>())
             .Returns((Campaign?)null);
-        _repository.CountUsedByEmailAndCampaignForMonth(
-                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+        _repository.CountUsedByEmailAndCampaign(
+                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<CancellationToken>())
             .Returns(0);
         _handler = new UseTopUpCodeCommandHandler(_repository, _campaignsRepository, _clock);
+    }
+
+    [Fact]
+    public async Task ItReturnsFailureWhenEmailIsInvalid()
+    {
+        var code = Guid.NewGuid();
+
+        var result = await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "invalid_email"), CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal("invalid_data", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ItDoesNotCallRepositoryWhenEmailIsInvalid()
+    {
+        var code = Guid.NewGuid();
+
+        await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "invalid_email"), CancellationToken.None);
+
+        await _repository.DidNotReceive().GetByCode(Arg.Any<TopUpCode>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -130,14 +151,14 @@ public class UseTopUpCodeCommandHandlerTest
         var campaign = Campaign.Create(campaignId, "Test", _clock, maxNumberOfTopUpsPerUser: 3);
         _repository.GetByCode(Arg.Any<TopUpCode>(), Arg.Any<CancellationToken>()).Returns(topUp);
         _campaignsRepository.GetById(campaignId, Arg.Any<CancellationToken>()).Returns(campaign);
-        _repository.CountUsedByEmailAndCampaignForMonth(
-                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+        _repository.CountUsedByEmailAndCampaign(
+                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<CancellationToken>())
             .Returns(3);
 
         var result = await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "user@example.com"), CancellationToken.None);
 
         Assert.False(result.Success);
-        Assert.Equal("usage_limit_exceeded", result.ErrorCode);
+        Assert.Equal("usage_limit_exceeded_in_campaign", result.ErrorCode);
     }
 
     [Fact]
@@ -149,8 +170,8 @@ public class UseTopUpCodeCommandHandlerTest
         var campaign = Campaign.Create(campaignId, "Test", _clock, maxNumberOfTopUpsPerUser: 3);
         _repository.GetByCode(Arg.Any<TopUpCode>(), Arg.Any<CancellationToken>()).Returns(topUp);
         _campaignsRepository.GetById(campaignId, Arg.Any<CancellationToken>()).Returns(campaign);
-        _repository.CountUsedByEmailAndCampaignForMonth(
-                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+        _repository.CountUsedByEmailAndCampaign(
+                Arg.Any<string>(), Arg.Any<CampaignId>(), Arg.Any<CancellationToken>())
             .Returns(3);
 
         await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "user@example.com"), CancellationToken.None);
