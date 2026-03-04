@@ -10,5 +10,6 @@ public interface ITopUpsRepository
     Task<List<TopUp>> GetByCampaignId(CampaignId campaignId, CancellationToken cancellationToken);
     Task<TopUp?> GetByCode(TopUpCode code, CancellationToken cancellationToken);
     Task<int> CountUsedByEmailAndCampaignForMonth(string email, CampaignId campaignId, int year, int month, CancellationToken cancellationToken);
+    Task<int> CountUsedByEmailAndCampaign(string email, CampaignId campaignId, CancellationToken cancellationToken);
     Task Update(TopUp topUp, CancellationToken cancellationToken);
 }

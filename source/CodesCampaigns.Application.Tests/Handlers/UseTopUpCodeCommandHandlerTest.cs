@@ -33,6 +33,27 @@ public class UseTopUpCodeCommandHandlerTest
     }
 
     [Fact]
+    public async Task ItReturnsFailureWhenEmailIsInvalid()
+    {
+        var code = Guid.NewGuid();
+
+        var result = await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "invalid_email"), CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal("invalid_data", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ItDoesNotCallRepositoryWhenEmailIsInvalid()
+    {
+        var code = Guid.NewGuid();
+
+        await _handler.Handle(new UseTopUpCodeCommand("PARTNER", code, "invalid_email"), CancellationToken.None);
+
+        await _repository.DidNotReceive().GetByCode(Arg.Any<TopUpCode>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task ItReturnsFailureWhenCodeNotFound()
     {
         var code = Guid.NewGuid();
