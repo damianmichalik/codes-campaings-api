@@ -43,7 +43,7 @@ namespace CodesCampaigns.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Campaigns");
+                    b.ToTable("Campaigns", (string)null);
                 });
 
             modelBuilder.Entity("CodesCampaigns.Infrastructure.Entities.TopUp", b =>
@@ -98,7 +98,7 @@ namespace CodesCampaigns.Infrastructure.Migrations
 
                     b.HasIndex("CampaignId");
 
-                    b.ToTable("TopUps");
+                    b.ToTable("TopUps", (string)null);
                 });
 
             modelBuilder.Entity("CodesCampaigns.Infrastructure.Entities.TopUp", b =>

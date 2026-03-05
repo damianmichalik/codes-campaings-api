@@ -11,6 +11,5 @@ public class UseTopUpCodeDto
     public required Guid Code { get; set; }
 
     [Required]
-    [EmailAddress]
     public required string Email { get; set; }
 }
