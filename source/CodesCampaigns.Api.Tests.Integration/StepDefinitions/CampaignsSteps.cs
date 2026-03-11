@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using CodesCampaigns.Api.Tests.Integration.Hooks;
@@ -258,6 +258,23 @@ internal sealed class CampaignsSteps
         Assert.Equal(expectedCount, entities.Count());
     }
     
+    [Given(@"there is top up campaign with code ""([^""]*)"" and name ""([^""]*)"" and max number of top ups per user is (\d+)")]
+    public static void GivenThereIsTopUpCampaignWithTotalLimit(string code, string _, int maxTotalTopUpsPerUser)
+    {
+        using var scope = FeatureHooks.Factory!.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var existing = db.Campaigns.FirstOrDefault(c => c.Name == code);
+        if (existing is not null)
+        {
+            existing.MaxNumberOfTopUpsPerUser = maxTotalTopUpsPerUser;
+        }
+        else
+        {
+            db.Campaigns.Add(new Campaign { Id = Guid.NewGuid(), Name = code, MaxNumberOfTopUpsPerUser = maxTotalTopUpsPerUser });
+        }
+        db.SaveChanges();
+    }
+
     [Given(@"there is top up code to use ""(.*)"" of (\d+) PLN for campaign ""(.*)""")]
     public static void GivenThereIsTopUpCodeForCampaign(string code, int amount, string campaignName)
     {
@@ -340,6 +357,110 @@ internal sealed class CampaignsSteps
     {
         var usedAt = FeatureHooks.Factory!.FakeClock.Current;
         CreateUsedTopUp(code, amount, campaignName, usedAt);
+    }
+
+    [Given(@"there is top up code ""([^""]*)"" of (\d+) PLN that is active from ""([^""]*)""")]
+    public static void GivenThereIsTopUpCodeActiveFrom(string code, int amount, string activeFromStr)
+    {
+        var activeFrom = DateTime.Parse(activeFromStr, null, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
+        var campaignId = Guid.NewGuid();
+
+        using (var scope = FeatureHooks.Factory!.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Campaigns.Add(new Campaign { Id = campaignId, Name = $"_placeholder_{campaignId}" });
+            db.SaveChanges();
+        }
+
+        using var topUpScope = FeatureHooks.Factory!.Services.CreateScope();
+        var topUpDb = topUpScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        topUpDb.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN",
+            CampaignId = campaignId,
+            ActiveFrom = activeFrom
+        });
+        topUpDb.SaveChanges();
+    }
+
+    [Given(@"there is top up code ""([^""]*)"" of (\d+) PLN with wallet expiration date ""([^""]*)""")]
+    public static void GivenThereIsTopUpCodeWithWalletExpirationDate(string code, int amount, string walletExpirationDateStr)
+    {
+        var walletExpirationDate = DateTime.Parse(walletExpirationDateStr, null, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
+        var campaignId = Guid.NewGuid();
+
+        using (var scope = FeatureHooks.Factory!.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Campaigns.Add(new Campaign { Id = campaignId, Name = $"_placeholder_{campaignId}" });
+            db.SaveChanges();
+        }
+
+        using var topUpScope = FeatureHooks.Factory!.Services.CreateScope();
+        var topUpDb = topUpScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        topUpDb.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN",
+            CampaignId = campaignId,
+            WalletExpirationDate = walletExpirationDate
+        });
+        topUpDb.SaveChanges();
+    }
+
+    [Given(@"there is top up code ""([^""]*)"" of (\d+) PLN that is expired at ""([^""]*)""")]
+    public static void GivenThereIsTopUpCodeExpiredAt(string code, int amount, string activeToStr)
+    {
+        var activeTo = DateTime.Parse(activeToStr, null, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
+        var campaignId = Guid.NewGuid();
+
+        using (var scope = FeatureHooks.Factory!.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Campaigns.Add(new Campaign { Id = campaignId, Name = $"_placeholder_{campaignId}" });
+            db.SaveChanges();
+        }
+
+        using var topUpScope = FeatureHooks.Factory!.Services.CreateScope();
+        var topUpDb = topUpScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        topUpDb.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN",
+            CampaignId = campaignId,
+            ActiveTo = activeTo
+        });
+        topUpDb.SaveChanges();
+    }
+
+    [Given(@"there is used top up code ""([^""]*)"" of (\d+) PLN without campaign")]
+    public static void GivenThereIsUsedTopUpCodeWithoutCampaign(string code, int amount)
+    {
+        var placeholderCampaignId = Guid.NewGuid();
+
+        using (var scope = FeatureHooks.Factory!.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Campaigns.Add(new Campaign { Id = placeholderCampaignId, Name = $"_placeholder_{placeholderCampaignId}" });
+            db.SaveChanges();
+        }
+
+        using var topUpScope = FeatureHooks.Factory!.Services.CreateScope();
+        var topUpDb = topUpScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        topUpDb.TopUps.Add(new TopUp
+        {
+            Code = Guid.Parse(code),
+            Amount = amount,
+            Currency = "PLN",
+            CampaignId = placeholderCampaignId,
+            Email = "test@domain.com",
+            UsedAt = FeatureHooks.Factory!.FakeClock.Current
+        });
+        topUpDb.SaveChanges();
     }
 
     private static void CreateUsedTopUp(string code, int amount, string campaignName, DateTime usedAt)
